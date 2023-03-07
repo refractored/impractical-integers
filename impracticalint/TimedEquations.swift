@@ -33,7 +33,7 @@ struct TimedEquations: View {
     @State var attempts: Int = 0
     @State var settings: Int = 0
     @State var equations = false
-    @State var timedNavigate = false
+    @Environment(\.presentationMode) var presentationMode
     @State var answer = ""
     @State var timer = -1
     @State var text = "Begin"
@@ -119,13 +119,13 @@ struct TimedEquations: View {
             .foregroundColor(.white)
             .buttonStyle(.borderedProminent)
             .tint(.red)
-//            if !equations{
-//                Button("Back"){
-//                    timedNavigate = true
-//                }
-//                .accentColor(.red)
-//                
-//            }
+            if !equations{
+                Button("Back"){
+                    presentationMode.wrappedValue.dismiss()
+                }
+                .accentColor(.red)
+                
+            }
             
             
             }
@@ -133,7 +133,7 @@ struct TimedEquations: View {
             //                .font(.largeTitle)
             //            Text("Correct/Incorrect Ratio")
             //                .font(.footnote)
-        .navigate(to: HomeScreen(), when: $timedNavigate)
+
         }
         
     }
