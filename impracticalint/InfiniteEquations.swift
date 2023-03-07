@@ -19,6 +19,7 @@ struct InfiniteEquations: View {
     @State var equations = false
     @State var timedNavigate = false
     @State var answer = ""
+    @State var converted = ""
     @State var timer = -1
     @State var text = "Begin"
     @State var currentInfo = equationInfo(thingys: [Int](), answer: 0, displayText: "")
@@ -47,9 +48,9 @@ struct InfiniteEquations: View {
                 
                 //if infCorrectScore != -1{
                     Text("C/I Ratio:")
-                    Text("\(round(ratioScore * 100) / 100.0)").font(.title2).fontWeight(.thin)
+                    Text("\(converted)").font(.title2).fontWeight(.thin)
                     .onAppear(perform: {
-                        ratioScore = Double(infCorrectScore) / Double(infIncorrectScore)
+                         converted = String(format: "%.1f", (Double(infCorrectScore) / Double(infIncorrectScore)))
                     })
                 //}
             }
@@ -105,13 +106,13 @@ struct InfiniteEquations: View {
             .foregroundColor(.white)
             .buttonStyle(.borderedProminent)
             .tint(.red)
-            if !equations{
-                Button("Back"){
-                    timedNavigate = true
-                }
-                .accentColor(.red)
-                
-            }
+//            if !equations{
+//                Button("Back"){
+//                    timedNavigate = true
+//                }
+//                .accentColor(.red)
+//                
+//            }
             
             
         }

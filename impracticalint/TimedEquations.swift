@@ -119,13 +119,13 @@ struct TimedEquations: View {
             .foregroundColor(.white)
             .buttonStyle(.borderedProminent)
             .tint(.red)
-            if !equations{
-                Button("Back"){
-                    timedNavigate = true
-                }
-                .accentColor(.red)
-                
-            }
+//            if !equations{
+//                Button("Back"){
+//                    timedNavigate = true
+//                }
+//                .accentColor(.red)
+//                
+//            }
             
             
             }

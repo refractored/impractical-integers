@@ -48,12 +48,12 @@ extension View {
             ZStack {
                 self
                     .navigationBarTitle("")
-                    .navigationBarHidden(true)
+                    .navigationBarHidden(false)
                 
                 NavigationLink(
                     destination: view
                         .navigationBarTitle("")
-                        .navigationBarHidden(true),
+                        .navigationBarHidden(false),
                     isActive: binding
                 ) {
                     EmptyView()
