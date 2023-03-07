@@ -10,6 +10,7 @@ import SwiftUI
 
 struct InfiniteEquations: View {
     @State var timeRemaining = 10
+    @State var timeConfig = 10
     let countdown = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @AppStorage("infCorrectScore") private var infCorrectScore = 0
     @AppStorage("infIncorrectScore") private var infIncorrectScore = 0
@@ -63,7 +64,7 @@ struct InfiniteEquations: View {
                             timeRemaining -= 1
                         }else{
                             infIncorrectScore += 1
-                            timeRemaining = 10
+                            timeRemaining = timeConfig
                             print("\(infCorrectScore) / \(infIncorrectScore)")
                             ratioScore = Double(infCorrectScore) / Double(infIncorrectScore)
                             equationShuffle(equationCount: Int(sliderValue), equations: &equations, equationInfos: &currentInfo)
@@ -82,6 +83,7 @@ struct InfiniteEquations: View {
                     if answer == String(currentInfo.answer){
                         infCorrectScore += 1
                         equationShuffle(equationCount: Int(sliderValue), equations: &equations, equationInfos: &currentInfo)
+                        timeRemaining = timeConfig
                         answer = ""
                     } else {
                         infIncorrectScore += 1
