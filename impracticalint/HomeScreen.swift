@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import FirebaseAnalyticsSwift
 
 struct HomeScreen: View {
     @State var timedNavigate = false
     @State var infiniteNavigate = false
+    @State var leaderboardNavigate = false
     var body: some View {
         VStack {
             Image(systemName: "heart.fill")
@@ -33,9 +35,20 @@ struct HomeScreen: View {
             .foregroundColor(.white)
             .buttonStyle(.borderedProminent)
             .tint(.red)
+            Button("Leaderboard") {
+                leaderboardNavigate = true
+            }
+            .foregroundColor(.white)
+            .buttonStyle(.borderedProminent)
+            .tint(.red)
         }
         .navigate(to: TimedEquations(), when: $timedNavigate)
         .navigate(to: InfiniteEquations(), when: $infiniteNavigate)
+        .navigate(to: ScoreboardView(), when: $leaderboardNavigate)
+
+        .analyticsScreen(name: "\(HomeScreen.self)")
+
+
     }
 }
 extension View {
