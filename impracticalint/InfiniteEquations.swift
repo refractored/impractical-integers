@@ -23,7 +23,7 @@ struct InfiniteEquations: View {
     @State var timer = -1
     @State var text = "Begin"
     @Environment(\.presentationMode) var presentationMode
-    @State var currentInfo = equationInfo(thingys: [Int](), answer: 0, displayText: "")
+    @State var currentInfo = equationInfo(terms: [Int](), answer: 0, displayText: "")
     var body: some View {
         
         VStack {
@@ -67,8 +67,7 @@ struct InfiniteEquations: View {
                             timeRemaining = timeConfig
                             print("\(infCorrectScore) / \(infIncorrectScore)")
                             ratioScore = Double(infCorrectScore) / Double(infIncorrectScore)
-                            equationShuffle(equationCount: Int(sliderValue), equations: &equations, equationInfos: &currentInfo)
-                            
+                            currentInfo = equationShuffle(equationCount: Int(sliderValue))
                             
                             
                         }
@@ -82,7 +81,7 @@ struct InfiniteEquations: View {
                 Button("Submit"){
                     if answer == String(currentInfo.answer){
                         infCorrectScore += 1
-                        equationShuffle(equationCount: Int(sliderValue), equations: &equations, equationInfos: &currentInfo)
+                        currentInfo = equationShuffle(equationCount: Int(sliderValue))
                         timeRemaining = timeConfig
                         answer = ""
                     } else {
@@ -98,9 +97,15 @@ struct InfiniteEquations: View {
                 .tint(.red)
             }
             Button("\(text)") {
-                equationToggle(equations: &equations, text: &text, equationInfos: &currentInfo)
                 if equations{
-                    equationShuffle(equationCount: Int(sliderValue), equations: &equations, equationInfos: &currentInfo)
+                    equations = false
+                    text = "Begin"
+                } else {
+                    equations = true
+                    text = "End"
+                }
+                if equations{
+                    currentInfo = equationShuffle(equationCount: Int(sliderValue))
                     timeRemaining = 10
                     
                 }
