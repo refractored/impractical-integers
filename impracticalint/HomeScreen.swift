@@ -95,15 +95,14 @@ func equationToggle(equations: inout Bool, text: inout String, equationInfos: in
 func equationShuffle(equationCount: Int, equations: inout Bool, equationInfos: inout equationInfo){
     
     
-    if equations{
-        equationInfos.thingys = []
-        equationInfos.displayText = ""
-        equationInfos.answer = 0
-        
+//    if equations{
+//        equationInfos.thingys = []
+//        equationInfos.displayText = ""
+//        equationInfos.answer = 0
+//
         while equationInfos.thingys.count < equationCount{
             equationInfos.thingys.append(Int.random(in: -20 ... 20))
         }
-        print(equationInfos.thingys)
         for i in 0..<equationCount{
             if Int.random(in: 0 ... 1) == 1{
                 if equationInfos.displayText != ""{
@@ -115,11 +114,9 @@ func equationShuffle(equationCount: Int, equations: inout Bool, equationInfos: i
                 }
             }else{
                 if equationInfos.displayText != ""{
-                    print(equationInfos.answer)
                     equationInfos.answer -= equationInfos.thingys[i]
                     equationInfos.displayText += " - \(equationInfos.thingys[i])"
                 } else {
-                    print(equationInfos.answer)
                     equationInfos.answer = equationInfos.thingys[i]
                     
                     equationInfos.displayText += "\(equationInfos.thingys[i])"
@@ -128,9 +125,9 @@ func equationShuffle(equationCount: Int, equations: inout Bool, equationInfos: i
         }
         print("Final \(equationInfos.answer)")
         
-    } else {
-        print("Shuffle requested whilst equationToggle is false. Ignoring...")
-    }
+//    } else {
+//        print("Shuffle requested whilst equationToggle is false. Ignoring...")
+//    }
 }
 struct LabelledDivider: View {
     
