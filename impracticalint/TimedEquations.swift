@@ -7,19 +7,8 @@
 
 import SwiftUI
 
-struct milkshoke: GeometryEffect{
-    var amount: CGFloat = 10
-    var shakesperunit = 3
-    var animatableData: CGFloat
-    
-    func effectValue(size: CGSize) -> ProjectionTransform {
-        ProjectionTransform(CGAffineTransform(translationX: amount * sin(animatableData * .pi * CGFloat(shakesperunit)), y: 0))
-    }
-}
-
-
 struct equationInfo{
-    var thingys: [Int]
+    var terms: [Int]
     var answer: Int
     var displayText: String
 }
@@ -37,18 +26,16 @@ struct TimedEquations: View {
     @State var answer = ""
     @State var timer = -1
     @State var text = "Begin"
-    @State var currentInfo = equationInfo(thingys: [Int](), answer: 0, displayText: "")
+    @State var currentInfo = equationInfo(terms: [Int](), answer: 0, displayText: "")
     var body: some View {
         
         VStack {
-            
             Image(systemName: "clock.fill")
                 .imageScale(.large)
                 .foregroundColor(.red)
             Text("60 Seconds!")
             Divider()
                 .frame(width: 200)
-            
             if !equations{
                 Text("Term Count:")
                     .font(.headline)
@@ -64,7 +51,6 @@ struct TimedEquations: View {
                 if timedHighScore != -1{
                     Text("High Score:")
                     Text("\(timedHighScore)").font(.title2).fontWeight(.thin)
-                    
                 }
             }
             if equations {
@@ -75,7 +61,13 @@ struct TimedEquations: View {
                             
                             timeRemaining -= 1
                         }else{
-                            equationToggle(equations: &equations, text: &text, equationInfos: &currentInfo)
+                            if equations{
+                                equations = false
+                                text = "Begin"
+                            } else {
+                                equations = true
+                                text = "End"
+                            }
                             if sessionScore > timedHighScore{
                                 timedHighScore = sessionScore
                             }
@@ -90,7 +82,7 @@ struct TimedEquations: View {
                 Button("Submit"){
                     if answer == String(currentInfo.answer){
                         sessionScore += 1
-                        equationShuffle(equationCount: Int(sliderValue), equations: &equations, equationInfos: &currentInfo)
+                        currentInfo = equationShuffle(equationCount: Int(sliderValue))
                         answer = ""
                     } else {
                         withAnimation(.default){
@@ -104,16 +96,18 @@ struct TimedEquations: View {
                 .tint(.red)
             }
             Button("\(text)") {
-                equationToggle(equations: &equations, text: &text, equationInfos: &currentInfo)
-                
                 if equations{
-                    sessionScore = 0
-                    equationShuffle(equationCount: Int(sliderValue), equations: &equations, equationInfos: &currentInfo)
-                    timeRemaining = 60
-                } else {
+                    equations = false
+                    text = "Begin"
                     if sessionScore > timedHighScore{
                         timedHighScore = sessionScore
                     }
+                } else {
+                    equations = true
+                    text = "End"
+                    sessionScore = 0
+                    currentInfo = equationShuffle(equationCount: Int(sliderValue))
+                    timeRemaining = 60
                 }
             }
             .foregroundColor(.white)
@@ -126,18 +120,6 @@ struct TimedEquations: View {
                 .accentColor(.red)
                 
             }
-            
-            
             }
-            //            Text("TBA")
-            //                .font(.largeTitle)
-            //            Text("Correct/Incorrect Ratio")
-            //                .font(.footnote)
-
         }
-        
     }
-        
-        
-    
-

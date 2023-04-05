@@ -52,10 +52,6 @@ struct HomeScreen: View {
     }
 }
 extension View {
-    /// Navigate to a new view.
-    /// - Parameters:
-    ///   - view: View to navigate to.
-    ///   - binding: Only navigates when this condition is `true`.
     func navigate<NewView: View>(to view: NewView, when binding: Binding<Bool>) -> some View {
         NavigationView {
             ZStack {
@@ -82,55 +78,46 @@ struct ContentView_Previews: PreviewProvider {
         HomeScreen()
     }
 }
-func equationToggle(equations: inout Bool, text: inout String, equationInfos: inout equationInfo){
-    if equations{
-        equations = false
-        text = "Begin"
-    } else {
-        equations = true
-        text = "End"
+
+struct milkshoke: GeometryEffect{
+    var amount: CGFloat = 10
+    var shakesperunit = 3
+    var animatableData: CGFloat
+    
+    func effectValue(size: CGSize) -> ProjectionTransform {
+        ProjectionTransform(CGAffineTransform(translationX: amount * sin(animatableData * .pi * CGFloat(shakesperunit)), y: 0))
     }
 }
 
-func equationShuffle(equationCount: Int, equations: inout Bool, equationInfos: inout equationInfo){
+func equationShuffle(equationCount: Int) -> equationInfo{
+        var temp = equationInfo(terms: [Int](), answer: 0, displayText: "")
     
-    
-    if equations{
-        equationInfos.thingys = []
-        equationInfos.displayText = ""
-        equationInfos.answer = 0
-        
-        while equationInfos.thingys.count < equationCount{
-            equationInfos.thingys.append(Int.random(in: -20 ... 20))
+        while temp.terms.count < equationCount{
+            temp.terms.append(Int.random(in: -20 ... 20))
         }
-        print(equationInfos.thingys)
-        for i in 0..<equationCount{
-            if Int.random(in: 0 ... 1) == 1{
-                if equationInfos.displayText != ""{
-                    equationInfos.answer += equationInfos.thingys[i]
-                    equationInfos.displayText += " + \(equationInfos.thingys[i])"
-                } else {
-                    equationInfos.answer = equationInfos.thingys[i]
-                    equationInfos.displayText += "\(equationInfos.thingys[i])"
-                }
-            }else{
-                if equationInfos.displayText != ""{
-                    print(equationInfos.answer)
-                    equationInfos.answer -= equationInfos.thingys[i]
-                    equationInfos.displayText += " - \(equationInfos.thingys[i])"
-                } else {
-                    print(equationInfos.answer)
-                    equationInfos.answer = equationInfos.thingys[i]
-                    
-                    equationInfos.displayText += "\(equationInfos.thingys[i])"
-                }
+    for i in 0..<equationCount {
+        let randomNumber = Int.random(in: 0...1)
+        let term = temp.terms[i]
+        if randomNumber == 1 {
+            if !temp.displayText.isEmpty {
+                temp.answer += term
+                temp.displayText += " + \(term)"
+            } else {
+                temp.answer = term
+                temp.displayText += "\(term)"
+            }
+        } else {
+            if !temp.displayText.isEmpty {
+                temp.answer -= term
+                temp.displayText += " - \(term)"
+            } else {
+                temp.answer = term
+                temp.displayText += "\(term)"
             }
         }
-        print("Final \(equationInfos.answer)")
-        
-    } else {
-        print("Shuffle requested whilst equationToggle is false. Ignoring...")
     }
+        print("\(temp.answer)")
+        return temp
 }
 struct LabelledDivider: View {
     
