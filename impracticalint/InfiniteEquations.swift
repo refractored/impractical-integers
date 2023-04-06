@@ -76,7 +76,7 @@ struct InfiniteEquations: View {
                 TextField("Answer", text: $answer)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 125)
-                    .modifier(milkshoke(animatableData: CGFloat(attempts)))
+                    .modifier(jiggleEffect(animatableData: CGFloat(attempts)))
                     .multilineTextAlignment(.center)
                 Button("Submit"){
                     if answer == String(currentInfo.answer){
@@ -99,16 +99,25 @@ struct InfiniteEquations: View {
             Button("\(text)") {
                 if equations{
                     equations = false
-                    text = "Begin"
+                    text = "Begin"  
                 } else {
                     equations = true
                     text = "End"
-                }
-                if equations{
                     currentInfo = equationShuffle(termCount: Int(sliderValue))
                     timeRemaining = 10
-                    
-                }
+            }
+//                if equations{
+//                    equations = false
+//                    text = "Begin"
+//                } else {
+//                    equations = true
+//                    text = "End"
+//                }
+//                if equations{
+//                    currentInfo = equationShuffle(termCount: Int(sliderValue))
+//                    timeRemaining = 10
+//
+//                }
             }
             .foregroundColor(.white)
             .buttonStyle(.borderedProminent)

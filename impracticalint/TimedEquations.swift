@@ -72,7 +72,7 @@ struct TimedEquations: View {
                 TextField("Answer", text: $answer)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 125)
-                    .modifier(milkshoke(animatableData: CGFloat(attempts)))
+                    .modifier(jiggleEffect(animatableData: CGFloat(attempts)))
                     .multilineTextAlignment(.center)
                 Button("Submit"){
                     if answer == String(currentInfo.answer){

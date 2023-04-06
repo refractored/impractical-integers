@@ -85,7 +85,7 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct milkshoke: GeometryEffect{
+struct jiggleEffect: GeometryEffect{
     var amount: CGFloat = 10
     var shakesperunit = 3
     var animatableData: CGFloat
@@ -107,24 +107,28 @@ func equationShuffle(termCount: Int) -> equationInfo{
         let isAddition = Bool.random()
         let term = temp.terms[i]
         
-        // Check if this is the first term, if so, make it equal to answer
-        // Without this check in place, Subtracting a negative number for the first term from 0, will make it positive. Ex: f(-3) = 0 - (-3) = 3
+        // Looks less confusing with bigger equations.
+        let displayterm = term < 0 ? "(\(term))" : "\(term)"
         
-        if temp.displayText.isEmpty{
-            temp.answer = term
-            temp.displayText += "\(term)"
-        }
-        
-        // If else, run operations required to get the new answer.
+        // Run operations required to get the new answer if text is not empty.
         if !temp.displayText.isEmpty{
             if isAddition{
                 temp.answer += term
-                temp.displayText += " + \(term)"
+                temp.displayText += " + \(displayterm)"
             }else{
                 temp.answer -= term
-                temp.displayText += " - \(term)"
+                temp.displayText += " - \(displayterm)"
             }
         }
+            
+        // Check if this is the first term, if so, make it equal to answer
+        // Without this check in place, Subtracting a negative number from the default value 0, will make it positive. Ex: f(-3) = 0 - (-3) = 3
+        
+        if temp.displayText.isEmpty{
+            temp.answer = term
+            temp.displayText += "\(displayterm  )"
+        }
+        
         
 
     }
