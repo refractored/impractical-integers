@@ -7,11 +7,6 @@
 
 import SwiftUI
 
-struct equationInfo{
-    var terms: [Int]
-    var answer: Int
-    var displayText: String
-}
 struct TimedEquations: View {
     @State var timeRemaining = 60
     let countdown = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -77,12 +72,12 @@ struct TimedEquations: View {
                 TextField("Answer", text: $answer)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 125)
-                    .modifier(milkshoke(animatableData: CGFloat(attempts)))
+                    .modifier(jiggleEffect(animatableData: CGFloat(attempts)))
                     .multilineTextAlignment(.center)
                 Button("Submit"){
                     if answer == String(currentInfo.answer){
                         sessionScore += 1
-                        currentInfo = equationShuffle(equationCount: Int(sliderValue))
+                        currentInfo = equationShuffle(termCount: Int(sliderValue))
                         answer = ""
                     } else {
                         withAnimation(.default){
@@ -99,6 +94,8 @@ struct TimedEquations: View {
                 if equations{
                     equations = false
                     text = "Begin"
+                    
+                    // Check if user has a score higher than their previous, if so, updates their high score.
                     if sessionScore > timedHighScore{
                         timedHighScore = sessionScore
                     }
@@ -106,7 +103,7 @@ struct TimedEquations: View {
                     equations = true
                     text = "End"
                     sessionScore = 0
-                    currentInfo = equationShuffle(equationCount: Int(sliderValue))
+                    currentInfo = equationShuffle(termCount: Int(sliderValue))
                     timeRemaining = 60
                 }
             }
