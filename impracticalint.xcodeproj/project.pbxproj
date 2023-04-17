@@ -67,7 +67,7 @@
 /* Begin PBXFileReference section */
 		51C47F34299E9A2E004AB819 /* impracticalint.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = impracticalint.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		51C47F37299E9A2E004AB819 /* impracticalintApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = impracticalintApp.swift; sourceTree = "<group>"; };
-		51C47F39299E9A2E004AB819 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
+		51C47F39299E9A2E004AB819 /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		51C47F3B299E9A2F004AB819 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		51C47F3E299E9A2F004AB819 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		51C47F44299E9A2F004AB819 /* impracticalintTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = impracticalintTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
