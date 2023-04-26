@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@master
       - name: Build
         run: |
-          xcodebuild clean build -project impracticalint.xcodeproj -scheme impracticalint --destination 'platform=iOS Simulator,OS=14.1,name=iPad Pro (12.9-inch) (4th generation)' | xcpretty -s
+          xcodebuild clean build -project impracticalint.xcodeproj -scheme impracticalint -destination 'platform=iOS Simulator,OS=14.1,name=iPad Pro (12.9-inch) (4th generation)' | xcpretty -s
         env: 
          destination: ${{ matrix.destination }}
       - name: Test
