@@ -1,24 +1,13 @@
-name: CI-Test
+name: tests
 
 on: [push]
 
 jobs:
-  test:
-    name: Test
-    runs-on: macos-latest
-    strategy:
-        matrix:
-          destination: ['platform=iOS Simulator, OS=16.2, name=iPad Air (4th generation)']
+  run_tests:
+    runs-on: macos-11
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
-      - name: Build
-        run: |
-          xcodebuild clean build -project impracticalint.xcodeproj -scheme impracticalint -destination 'platform=iOS Simulator, id=AD586A2A-04F8-42CF-90F8-5189066E8EF5, OS=16.2, name=iPad (9th generation)' | xcpretty -s
-        env: 
-         destination: ${{ matrix.destination }}
-      - name: Test
-        run: |
-          xcodebuild clean test -project impracticalint.xcodeproj -scheme GHFollowersTests -destination 'platform=iOS Simulator, id=AD586A2A-04F8-42CF-90F8-5189066E8EF5, OS=16.2, name=iPad (9th generation)' | xcpretty -s
-        env: 
-         destination: ${{ matrix.destination }}
+    - uses: actions/checkout@v1
+    - name: Select Xcode
+      run: sudo xcode-select -switch /Applications/Xcode_13.0.app && /usr/bin/xcodebuild -version
+    - name: Run tests
+      run: xcodebuild test -scheme MyProjectName -project impracticalint.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 12,OS=15.0' | xcpretty && exit ${PIPESTATUS[0]}
