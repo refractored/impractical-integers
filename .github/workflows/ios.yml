@@ -1,15 +1,19 @@
-language: swift
-osx_image: xcode10.2
+name: Xcode - Build Analyze
 
-env:
-  matrix:
-   - DESTINATION="platform=iOS Simulator,OS=12.2,name=iPhone X"
-   - DESTINATION="platform=tvOS Simulator,OS=12.2,name=Apple TV 4K"
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
-before_script: cd Texstyle
+jobs:
+  build:
+    name: Build and analyze and test using xcodebuild command
+    runs-on: macos-latest
 
-script:
-   - xcodebuild clean test -project Texstyle.xcodeproj -scheme Texstyle -destination "$DESTINATION" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
-   
-after_success:
-  - bash <(curl -s https://codecov.io/bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: |
+          xcodebuild clean build analyze -scheme RenetikLayout -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11'
