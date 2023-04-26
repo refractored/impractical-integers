@@ -8,7 +8,7 @@ jobs:
     runs-on: macos-latest
     strategy:
         matrix:
-          destination: ['platform=iOS Simulator, id=10E49D37-23E8-4DB7-B835-7E35EF51380C, OS=16.2, name=iPad Air (4th generation)']
+          destination: ['platform=iOS Simulator, OS=16.2, name=iPad Air (4th generation)']
     steps:
       - name: Checkout
         uses: actions/checkout@master
