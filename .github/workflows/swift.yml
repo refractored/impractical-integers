@@ -1,22 +1,15 @@
-# This workflow will build a Swift project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
+language: swift
+osx_image: xcode10.2
 
-name: Swift
+env:
+  matrix:
+   - DESTINATION="platform=iOS Simulator,OS=12.2,name=iPhone X"
+   - DESTINATION="platform=tvOS Simulator,OS=12.2,name=Apple TV 4K"
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+before_script: cd Texstyle
 
-jobs:
-  build:
-
-    runs-on: macos-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+script:
+   - xcodebuild clean test -project Texstyle.xcodeproj -scheme Texstyle -destination "$DESTINATION" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+   
+after_success:
+  - bash <(curl -s https://codecov.io/bash
