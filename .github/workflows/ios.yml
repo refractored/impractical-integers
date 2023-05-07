@@ -17,4 +17,4 @@ jobs:
       - name: Update Swift tools
         run: sudo xcode-select --switch /Applications/Xcode_13.2.app && swift package update
       - name: Run tests
-        run: xcodebuild test -scheme impracticalint -project impracticalint.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 12,OS=15.0' | xcpretty && exit ${PIPESTATUS[0]}
+        run: xcodebuild test -scheme impracticalint -project impracticalint.xcodeproj -destination 'platform=iOS Simulator,name=iPhone 12,id:dvtdevice-DVTiPhone13-iphoneos:15.0' | xcpretty && exit ${PIPESTATUS[0]}
