@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FirebaseAnalyticsSwift
 
 struct equationInfo{
     var terms: [Int]
@@ -52,7 +51,7 @@ struct HomeScreen: View {
         .navigate(to: InfiniteEquations(), when: $infiniteNavigate)
         .navigate(to: ScoreboardView(), when: $leaderboardNavigate)
 
-        .analyticsScreen(name: "\(HomeScreen.self)")
+    
 
 
     }
