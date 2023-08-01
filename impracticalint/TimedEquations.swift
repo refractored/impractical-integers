@@ -8,6 +8,18 @@
 import SwiftUI
 import AVFoundation
 
+extension AnyTransition {
+    static var slideInFromBottom: AnyTransition {
+        let insertion = AnyTransition.move(edge: .bottom).combined(with: .opacity)
+        return .asymmetric(insertion: insertion, removal: .identity)
+    }
+    
+    static var slideOutToBottom: AnyTransition {
+        let removal = AnyTransition.move(edge: .bottom).combined(with: .opacity)
+        return .asymmetric(insertion: .identity, removal: removal)
+    }
+}
+
 struct TimedEquations: View {
     @State var timeRemaining = 60
     let countdown = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -22,17 +34,15 @@ struct TimedEquations: View {
     @State var answer = ""
     @State var timer = -1
     @State var text = "Begin"
+    let buttonBackground = Color("buttonBackground")
     @State var currentInfo = equationInfo(terms: [Int](), answer: 0, displayText: "")
     var body: some View {
-
-
+        
+        
         VStack {
             Image(systemName: "clock.fill")
                 .imageScale(.large)
-                .foregroundColor(.red)
-            Text("60 Seconds!")
-            Divider()
-                .frame(width: 200)
+                .foregroundColor(buttonBackground)
             if !equations{
                 Text("Term Count:")
                     .font(.headline)
@@ -90,7 +100,7 @@ struct TimedEquations: View {
                 }
                 .foregroundColor(.white)
                 .buttonStyle(.borderedProminent)
-                .tint(.red)
+                .tint(buttonBackground)
             }
             Button("\(text)") {
                 if equations{
@@ -111,45 +121,102 @@ struct TimedEquations: View {
             }
             .foregroundColor(.white)
             .buttonStyle(.borderedProminent)
-            .tint(.red)
+            .tint(buttonBackground)
             if !equations{
                 Button("Back"){
                     presentationMode.wrappedValue.dismiss()
                 }
-                .accentColor(.red)
+                .accentColor(buttonBackground)
                 
             }
-            Keypad()
+            if equations {
+                
+                VStack {
+                    HStack {
+                        KeyButton(text: "1"){
+                            print("Button 1 is pressed")
+                        }
+                        
+                        KeyButton(text: "2"){
+                            print("Button 2 is pressed")
+                        }
+                        KeyButton(text: "3"){
+                            print("Button 3 is pressed")
+                        }
+                    }
+                    HStack {
+                        KeyButton(text: "4"){
+                            print("Button 4 is pressed")
+                        }
+                        
+                        KeyButton(text: "5"){
+                            print("Button 5 is pressed")
+                        }
+                        KeyButton(text: "6"){
+                            print("Button 6 is pressed")
+                        }
+                    }
+                    HStack {
+                        KeyButton(text: "7"){
+                            print("Button 7 is pressed")
+                        }
+                        
+                        KeyButton(text: "8"){
+                            print("Button 8 is pressed")
+                        }
+                        KeyButton(text: "9"){
+                            print("Button 9 is pressed")
+                        }
+                        
+                    }
+                    HStack {
+                        
+                        KeyButton(text: "-"){
+                            print("Button 8 is pressed")
+                        }
+                        KeyButton(text: "c"){
+                            print("Button 9 is pressed")
+                        }
+                    }
+                }
+                .transition(.slideInFromBottom)
             }
         }
+        .onTapGesture {
+            withAnimation {
+                equations.toggle()
+            }
+            
+        }
     }
+}
 struct KeyButton: View {
     @State private var isAnimating = false
-
+    
     var text: String
     var action: () -> Void
-
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20, style: .circular)
-                .foregroundColor(.white)
+                .foregroundColor(Color("buttonBackground"))
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
-                        .stroke(.gray, lineWidth: 4)
+                        .stroke(Color("foregroundTwo"), lineWidth: 4)
                 )
                 .frame(width: isAnimating ? 70 : 80, height: isAnimating ? 70 : 80)
                 .scaleEffect(isAnimating ? 0.8 : 1.0) // Apply the scaling effect on tap
-
+            
             Text(text)
                 .bold()
                 .font(.title)
                 .fontWeight(.heavy)
-                .foregroundColor(.gray)
+                .foregroundColor(Color("foregroundTwo"))
         }
         .onTapGesture {
             action()
             isAnimating = true // Shrink the button on tap
-
+            
             // Reset the animation after a short delay
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 isAnimating = false
@@ -162,45 +229,4 @@ struct KeyButton: View {
 
 
 
-struct Keypad: View {
-    var body: some View {
-        VStack {
-            HStack {
-                KeyButton(text: "1"){
-                    print("Button 1 is pressed")
-                }
 
-                KeyButton(text: "2"){
-                    print("Button 2 is pressed")
-                }
-                KeyButton(text: "3"){
-                    print("Button 3 is pressed")
-                }
-            }
-            HStack {
-                KeyButton(text: "4"){
-                    print("Button 4 is pressed")
-                }
-
-                KeyButton(text: "5"){
-                    print("Button 5 is pressed")
-                }
-                KeyButton(text: "6"){
-                    print("Button 6 is pressed")
-                }
-            }
-            HStack {
-                KeyButton(text: "7"){
-                    print("Button 7 is pressed")
-                }
-
-                KeyButton(text: "8"){
-                    print("Button 8 is pressed")
-                }
-                KeyButton(text: "9"){
-                    print("Button 9 is pressed")
-                }
-            }
-        }
-    }
-}
