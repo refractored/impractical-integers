@@ -40,29 +40,39 @@ struct TimedEquations: View {
         
         
         VStack {
-            Image(systemName: "clock.fill")
-                .imageScale(.large)
-                .foregroundColor(buttonBackground)
+
             if !equations{
-                Text("Term Count:")
-                    .font(.headline)
-                Text("\(Int(sliderValue))").font(.title2).fontWeight(.thin)
-                Slider(value: $sliderValue, in: 2...5) {
-                } minimumValueLabel: {
-                    Text("2").font(.callout).fontWeight(.thin)
-                } maximumValueLabel: {
-                    Text("5").font(.callout).fontWeight(.thin)
-                }
-                .frame(width: 125, height: 5)
-                
-                if timedHighScore != -1{
-                    Text("High Score:")
-                    Text("\(timedHighScore)").font(.title2).fontWeight(.thin)
+                Image(systemName: "clock.fill")
+                    .imageScale(.large)
+                    .foregroundColor(buttonBackground)
+                VStack {
+                    Text("Term Count:")
+                        .font(.headline)
+                    Text("\(Int(sliderValue))").font(.title2).fontWeight(.thin)
+                    Slider(value: $sliderValue, in: 2...5) {
+                    } minimumValueLabel: {
+                        Text("2").font(.callout).fontWeight(.thin)
+                    } maximumValueLabel: {
+                        Text("5").font(.callout).fontWeight(.thin)
+                    }
+                    .frame(width: 125, height: 5)
+                    
+                    if timedHighScore != -1{
+                        Text("High Score:")
+                        Text("\(timedHighScore)").font(.title2).fontWeight(.thin)
+                    }
+                    
                 }
             }
+
             if equations {
+                VStack{
+                    Image(systemName: "clock.fill")
+                        .imageScale(.large)
+                        .foregroundColor(buttonBackground)
                 Text(String(timeRemaining))
-                    .font(.largeTitle)
+                        .font(.largeTitle)
+                    .fontWeight(.heavy)
                     .onReceive(countdown){ time in
                         if timeRemaining > 0 {
                             
@@ -74,6 +84,7 @@ struct TimedEquations: View {
                             } else {
                                 equations = true
                                 text = "End"
+                                // .foregroundColor(.red)
                             }
                             if sessionScore > timedHighScore{
                                 timedHighScore = sessionScore
@@ -86,21 +97,24 @@ struct TimedEquations: View {
                     .frame(width: 125)
                     .modifier(jiggleEffect(animatableData: CGFloat(attempts)))
                     .multilineTextAlignment(.center)
-                Button("Submit"){
-                    if answer == String(currentInfo.answer){
-                        sessionScore += 1
-                        currentInfo = equationShuffle(termCount: Int(sliderValue))
-                        answer = ""
-                    } else {
-                        withAnimation(.default){
-                            attempts += 1
-                            answer = ""
-                        }
-                    }
-                }
+//                Button("Submit"){
+//                    if answer == String(currentInfo.answer){
+//                        sessionScore += 1
+//                        currentInfo = equationShuffle(termCount: Int(sliderValue))
+//                        answer = ""
+//                    } else {
+//                        withAnimation(.default){
+//                            attempts += 1
+//                            answer = ""
+//                        }
+//                    }
+//                }
                 .foregroundColor(.white)
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
+            }
+                .transition(.slideInFromBottom)
+                .animation(.spring())
             }
             Button("\(text)") {
                 if equations{
@@ -182,12 +196,12 @@ struct TimedEquations: View {
                 .transition(.slideInFromBottom)
             }
         }
-        .onTapGesture {
-            withAnimation {
-                equations.toggle()
-            }
-            
-        }
+//        .onTapGesture {
+//            withAnimation {
+//                equations.toggle()
+//            }
+//            
+//        }
     }
 }
 struct KeyButton: View {
@@ -204,7 +218,7 @@ struct KeyButton: View {
                     RoundedRectangle(cornerRadius: 16)
                         .stroke(Color("foregroundTwo"), lineWidth: 4)
                 )
-                .frame(width: isAnimating ? 70 : 80, height: isAnimating ? 70 : 80)
+                .frame(width: isAnimating ? 65 : 75, height: isAnimating ? 65 : 75)
                 .scaleEffect(isAnimating ? 0.8 : 1.0) // Apply the scaling effect on tap
             
             Text(text)
