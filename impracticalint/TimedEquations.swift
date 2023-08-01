@@ -125,24 +125,11 @@ struct TimedEquations: View {
     }
 struct KeyButton: View {
     @State private var isAnimating = false
-    @GestureState private var isDetectingLongPress = false
-    @State private var isLongPressing = false // Additional state property
 
     var text: String
+    var action: () -> Void
 
     var body: some View {
-        let longPress = LongPressGesture(minimumDuration: 0.01)
-            .updating($isDetectingLongPress) { currentState, gestureState, transaction in
-                gestureState = currentState
-                isLongPressing = currentState // Update the additional state property
-            }
-            .onEnded { _ in
-                withAnimation(.spring()) {
-                    isAnimating = false
-                }
-                isLongPressing = false // Reset the long press state after the gesture is completed
-            }
-
         ZStack {
             RoundedRectangle(cornerRadius: 20, style: .circular)
                 .foregroundColor(.white)
@@ -151,7 +138,7 @@ struct KeyButton: View {
                         .stroke(.gray, lineWidth: 4)
                 )
                 .frame(width: isAnimating ? 70 : 80, height: isAnimating ? 70 : 80)
-                .scaleEffect(isLongPressing ? 0.8 : 1.0) // Apply the scaling effect on tap
+                .scaleEffect(isAnimating ? 0.8 : 1.0) // Apply the scaling effect on tap
 
             Text(text)
                 .bold()
@@ -159,27 +146,60 @@ struct KeyButton: View {
                 .fontWeight(.heavy)
                 .foregroundColor(.gray)
         }
-        .gesture(
-            longPress
-                .onChanged { isPressing in
-                    withAnimation(.spring()) {
-                        isAnimating = isPressing // Apply the scaling effect when pressing
-                    }
-                }
-        )
+        .onTapGesture {
+            action()
+            isAnimating = true // Shrink the button on tap
+
+            // Reset the animation after a short delay
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                isAnimating = false
+            }
+        }
         .animation(.spring()) // Apply animation to the whole view
     }
 }
+
+
+
 
 struct Keypad: View {
     var body: some View {
         VStack {
             HStack {
-                KeyButton(text: "1")
+                KeyButton(text: "1"){
+                    print("Button 1 is pressed")
+                }
 
-                KeyButton(text: "2")
+                KeyButton(text: "2"){
+                    print("Button 2 is pressed")
+                }
+                KeyButton(text: "3"){
+                    print("Button 3 is pressed")
+                }
+            }
+            HStack {
+                KeyButton(text: "4"){
+                    print("Button 4 is pressed")
+                }
 
-                KeyButton(text: "3")
+                KeyButton(text: "5"){
+                    print("Button 5 is pressed")
+                }
+                KeyButton(text: "6"){
+                    print("Button 6 is pressed")
+                }
+            }
+            HStack {
+                KeyButton(text: "7"){
+                    print("Button 7 is pressed")
+                }
+
+                KeyButton(text: "8"){
+                    print("Button 8 is pressed")
+                }
+                KeyButton(text: "9"){
+                    print("Button 9 is pressed")
+                }
             }
         }
     }
