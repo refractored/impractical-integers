@@ -40,7 +40,7 @@ struct TimedEquations: View {
         
         
         VStack {
-
+            
             if !equations{
                 Image(systemName: "clock.fill")
                     .imageScale(.large)
@@ -64,78 +64,70 @@ struct TimedEquations: View {
                     
                 }
             }
-
+            
             if equations {
                 VStack{
                     Image(systemName: "clock.fill")
                         .imageScale(.large)
                         .foregroundColor(buttonBackground)
-                Text(String(timeRemaining))
+                    Text(String(timeRemaining))
                         .font(.largeTitle)
-                    .fontWeight(.heavy)
-                    .onReceive(countdown){ time in
-                        if timeRemaining > 0 {
-                            
-                            timeRemaining -= 1
-                        }else{
-                            if equations{
-                                equations = false
-                                text = "Begin"
-                            } else {
-                                equations = true
-                                text = "End"
-                                // .foregroundColor(.red)
-                            }
-                            if sessionScore > timedHighScore{
-                                timedHighScore = sessionScore
+                        .fontWeight(.heavy)
+                        .onReceive(countdown){ time in
+                            if timeRemaining > 0 {
+                                
+                                timeRemaining -= 1
+                            }else{
+                                if equations{
+                                    equations = false
+                                    text = "Begin"
+                                } else {
+                                    equations = true
+                                    text = "End"
+                                    // .foregroundColor(.red)
+                                }
+                                if sessionScore > timedHighScore{
+                                    timedHighScore = sessionScore
+                                }
                             }
                         }
-                    }
-                Text(currentInfo.displayText)
-                TextField("Answer", text: $answer)
-                    .textFieldStyle(.roundedBorder)
-                    .frame(width: 125)
-                    .modifier(jiggleEffect(animatableData: CGFloat(attempts)))
-                    .multilineTextAlignment(.center)
-//                Button("Submit"){
-//                    if answer == String(currentInfo.answer){
-//                        sessionScore += 1
-//                        currentInfo = equationShuffle(termCount: Int(sliderValue))
-//                        answer = ""
-//                    } else {
-//                        withAnimation(.default){
-//                            attempts += 1
-//                            answer = ""
-//                        }
-//                    }
-//                }
-                .foregroundColor(.white)
-                .buttonStyle(.borderedProminent)
-                .tint(buttonBackground)
-            }
+                    Text(currentInfo.displayText)
+                    TextField("Answer", text: $answer)
+                    //.textFieldStyle(.roundedBorder)
+                    //  .frame(width: 125)
+                        .modifier(jiggleEffect(animatableData: CGFloat(attempts)))
+                        .multilineTextAlignment(.center)
+                    //                Button("Submit"){
+                    //                    if answer == String(currentInfo.answer){
+                    //                        sessionScore += 1
+                    //                        currentInfo = equationShuffle(termCount: Int(sliderValue))
+                    //                        answer = ""
+                    //                    } else {
+                    //                        withAnimation(.default){
+                    //                            attempts += 1
+                    //                            answer = ""
+                    //                        }
+                    //                    }
+                    //                }
+                        .foregroundColor(.white)
+                        .buttonStyle(.borderedProminent)
+                        .tint(buttonBackground)
+                }
                 .transition(.slideInFromBottom)
                 .animation(.spring())
             }
-            Button("\(text)") {
-                if equations{
-                    equations = false
-                    text = "Begin"
-                    
-                    // Check if user has a score higher than their previous, if so, updates their high score.
-                    if sessionScore > timedHighScore{
-                        timedHighScore = sessionScore
-                    }
-                } else {
+            if !equations{
+                Button("\(text)") {
                     equations = true
-                    text = "End"
                     sessionScore = 0
                     currentInfo = equationShuffle(termCount: Int(sliderValue))
                     timeRemaining = 60
                 }
+                .foregroundColor(.white)
+                .buttonStyle(.borderedProminent)
+                .tint(buttonBackground)
             }
-            .foregroundColor(.white)
-            .buttonStyle(.borderedProminent)
-            .tint(buttonBackground)
+        }
             if !equations{
                 Button("Back"){
                     presentationMode.wrappedValue.dismiss()
@@ -143,104 +135,115 @@ struct TimedEquations: View {
                 .accentColor(buttonBackground)
                 
             }
-            if equations {
-                
-                VStack {
-                    HStack {
-                        KeyButton(text: "1"){
-                            print("Button 1 is pressed")
+                if equations {
+                    
+                    VStack {
+                        HStack {
+                            KeyButton(text: "1"){
+                                answer += "1"
+                            }
+                            
+                            KeyButton(text: "2"){
+                                answer += "2"
+                            }
+                            KeyButton(text: "3"){
+                                answer += "3"
+                            }
                         }
-                        
-                        KeyButton(text: "2"){
-                            print("Button 2 is pressed")
+                        HStack {
+                            KeyButton(text: "4"){
+                                answer += "4"
+                            }
+                            
+                            KeyButton(text: "5"){
+                                answer += "5"
+                            }
+                            KeyButton(text: "6"){
+                                answer += "6"
+                            }
                         }
-                        KeyButton(text: "3"){
-                            print("Button 3 is pressed")
+                        HStack {
+                            KeyButton(text: "7"){
+                                answer += "7"
+                            }
+                            
+                            KeyButton(text: "8"){
+                                answer += "8"
+                            }
+                            KeyButton(text: "9"){
+                                answer += "9"
+                            }
+                            
+                        }
+                        HStack {
+                            
+                            KeyButton(text: "-"){
+                                answer += "-"
+                            }
+                            KeyButton(text: "C"){
+                                answer = ""
+                                withAnimation(.default){
+                                    attempts += 1
+                                    answer = ""
+                                }
+                                }
+                            KeyButton(text: "End"){
+                                equations = false
+                                // Check if user has a score higher than their previous, if so, updates their high score.
+                                if sessionScore > timedHighScore{
+                                    timedHighScore = sessionScore                        }
+                            }
                         }
                     }
-                    HStack {
-                        KeyButton(text: "4"){
-                            print("Button 4 is pressed")
-                        }
-                        
-                        KeyButton(text: "5"){
-                            print("Button 5 is pressed")
-                        }
-                        KeyButton(text: "6"){
-                            print("Button 6 is pressed")
-                        }
-                    }
-                    HStack {
-                        KeyButton(text: "7"){
-                            print("Button 7 is pressed")
-                        }
-                        
-                        KeyButton(text: "8"){
-                            print("Button 8 is pressed")
-                        }
-                        KeyButton(text: "9"){
-                            print("Button 9 is pressed")
-                        }
-                        
-                    }
-                    HStack {
-                        
-                        KeyButton(text: "-"){
-                            print("Button 8 is pressed")
-                        }
-                        KeyButton(text: "c"){
-                            print("Button 9 is pressed")
-                        }
-                    }
+                    .transition(.slideInFromBottom)
+                  //  .animation(.spring())
+
                 }
-                .transition(.slideInFromBottom)
+                //        .onTapGesture {
+                //            withAnimation {
+                //                equations.toggle()
+                //            }
+                //
+                //        }
             }
         }
-//        .onTapGesture {
-//            withAnimation {
-//                equations.toggle()
-//            }
-//            
-//        }
-    }
-}
-struct KeyButton: View {
-    @State private var isAnimating = false
-    
-    var text: String
-    var action: () -> Void
-    
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 20, style: .circular)
-                .foregroundColor(Color("buttonBackground"))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color("foregroundTwo"), lineWidth: 4)
-                )
-                .frame(width: isAnimating ? 65 : 75, height: isAnimating ? 65 : 75)
-                .scaleEffect(isAnimating ? 0.8 : 1.0) // Apply the scaling effect on tap
-            
-            Text(text)
-                .bold()
-                .font(.title)
-                .fontWeight(.heavy)
-                .foregroundColor(Color("foregroundTwo"))
-        }
-        .onTapGesture {
-            action()
-            isAnimating = true // Shrink the button on tap
-            
-            // Reset the animation after a short delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                isAnimating = false
+    struct KeyButton: View {
+        @State private var isAnimating = false
+        
+        var text: String
+        var action: () -> Void
+        
+        var body: some View {
+            ZStack {
+                RoundedRectangle(cornerRadius: 20, style: .circular)
+                    .foregroundColor(Color("buttonBackground"))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color("foregroundTwo"), lineWidth: 4)
+                    )
+                    .frame(width: isAnimating ? 65 : 75, height: isAnimating ? 65 : 75)
+                    .scaleEffect(isAnimating ? 0.8 : 1.0) // Apply the scaling effect on tap
+                
+                Text(text)
+                    .bold()
+                    .font(.title)
+                    .fontWeight(.heavy)
+                    .foregroundColor(Color("foregroundTwo"))
             }
+            .onTapGesture {
+                action()
+                isAnimating = true // Shrink the button on tap
+                
+                // Reset the animation after a short delay
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    isAnimating = false
+                }
+            }
+            .animation(.spring()) // Apply animation to the whole view
         }
-        .animation(.spring()) // Apply animation to the whole view
     }
-}
-
-
-
-
-
+    
+    
+    
+    
+    
