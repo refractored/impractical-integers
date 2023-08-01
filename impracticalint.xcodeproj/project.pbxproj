@@ -158,8 +158,8 @@
 			children = (
 				51C47F37299E9A2E004AB819 /* impracticalintApp.swift */,
 				51C47F39299E9A2E004AB819 /* HomeScreen.swift */,
-				51C47F61299E9C74004AB819 /* InfiniteEquations.swift */,
 				51C47F63299E9CC0004AB819 /* TimedEquations.swift */,
+				51C47F61299E9C74004AB819 /* InfiniteEquations.swift */,
 				51F90A7C29BA3C48004D2236 /* Leaderboard.swift */,
 				51C47F3B299E9A2F004AB819 /* Assets.xcassets */,
 				51F90A7A29BA3B6D004D2236 /* GoogleService-Info.plist */,

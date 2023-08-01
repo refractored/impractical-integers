@@ -53,33 +53,39 @@ struct ImageOverlay: View{
     }
 }
 struct ScoreOverlay: View{
+    @AppStorage("correct") private var timedHighScore = -1
+
     var body: some View {
-        HStack{
-            Spacer()
-                .frame(width: 60)
+//        HStack{
             VStack{
-                Spacer()
-                    .frame(height: 30)
                 ZStack{
+                    RoundedRectangle(cornerRadius: 30)
+                        .background(.ultraThinMaterial)
+                        .frame(width: 150, height: 65)
+                        .clipShape(Capsule())
                     VStack{
-                        Text("tes")
-                            .font(.title2)
+                        Text("Timed Highest:")
+                            .font(.body)
                             .fontWeight(.heavy)
                             .foregroundColor(.white)
                             .font(.callout)
-                        Spacer()
-                            .frame(maxHeight: 20)
+                        Text("\(timedHighScore)")
+                            .font(.subheadline)
+                            .fontWeight(.light)
+                            .foregroundColor(.white)
+                            .font(.callout)
+
                     }
-                    .padding()
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16.0))
+
                 
                 }
-//                }.background(Color.black)
-//                    .opacity(0.8)
-//                    .cornerRadius(10.0)
-//                    .padding(6)
+                .padding()
+//                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 35))
+                .fixedSize()
+                Spacer()
+                    .frame(maxHeight: 25)
             }
-        }
+//        }
     }
 }
 struct HomeScreen: View {
@@ -99,12 +105,12 @@ struct HomeScreen: View {
                     .padding()
                     //.scaledToFit()
                     // .scaleEffect(0.5)
-                    .frame(width: 400, height: 500)
+                    .frame(width: 400, height: 550)
                     .overlay(
                         ImageOverlay(), alignment: .topLeading
                     )
                     .overlay(
-                        ScoreOverlay(), alignment: .bottomLeading
+                        ScoreOverlay(), alignment: .bottom
                     )
                 //            Image(systemName: "heart.fill")
                 //                .imageScale(.large)

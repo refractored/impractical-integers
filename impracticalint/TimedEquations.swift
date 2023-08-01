@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct TimedEquations: View {
     @State var timeRemaining = 60
@@ -23,7 +24,8 @@ struct TimedEquations: View {
     @State var text = "Begin"
     @State var currentInfo = equationInfo(terms: [Int](), answer: 0, displayText: "")
     var body: some View {
-        
+
+
         VStack {
             Image(systemName: "clock.fill")
                 .imageScale(.large)
@@ -117,6 +119,68 @@ struct TimedEquations: View {
                 .accentColor(.red)
                 
             }
+            Keypad()
             }
         }
     }
+struct KeyButton: View {
+    @State private var isAnimating = false
+    @GestureState private var isDetectingLongPress = false
+    @State private var isLongPressing = false // Additional state property
+
+    var text: String
+
+    var body: some View {
+        let longPress = LongPressGesture(minimumDuration: 0.01)
+            .updating($isDetectingLongPress) { currentState, gestureState, transaction in
+                gestureState = currentState
+                isLongPressing = currentState // Update the additional state property
+            }
+            .onEnded { _ in
+                withAnimation(.spring()) {
+                    isAnimating = false
+                }
+                isLongPressing = false // Reset the long press state after the gesture is completed
+            }
+
+        ZStack {
+            RoundedRectangle(cornerRadius: 20, style: .circular)
+                .foregroundColor(.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(.gray, lineWidth: 4)
+                )
+                .frame(width: isAnimating ? 70 : 80, height: isAnimating ? 70 : 80)
+                .scaleEffect(isLongPressing ? 0.8 : 1.0) // Apply the scaling effect on tap
+
+            Text(text)
+                .bold()
+                .font(.title)
+                .fontWeight(.heavy)
+                .foregroundColor(.gray)
+        }
+        .gesture(
+            longPress
+                .onChanged { isPressing in
+                    withAnimation(.spring()) {
+                        isAnimating = isPressing // Apply the scaling effect when pressing
+                    }
+                }
+        )
+        .animation(.spring()) // Apply animation to the whole view
+    }
+}
+
+struct Keypad: View {
+    var body: some View {
+        VStack {
+            HStack {
+                KeyButton(text: "1")
+
+                KeyButton(text: "2")
+
+                KeyButton(text: "3")
+            }
+        }
+    }
+}
