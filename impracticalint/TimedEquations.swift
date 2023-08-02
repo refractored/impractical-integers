@@ -20,6 +20,7 @@ extension AnyTransition {
     }
 }
 
+
 struct TimedEquations: View {
     @State var timeRemaining = 60
     let countdown = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -93,22 +94,10 @@ struct TimedEquations: View {
                         }
                     Text(currentInfo.displayText)
                     TextField("Answer", text: $answer)
-                    //.textFieldStyle(.roundedBorder)
-                    //  .frame(width: 125)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
                         .modifier(jiggleEffect(animatableData: CGFloat(attempts)))
                         .multilineTextAlignment(.center)
-                    //                Button("Submit"){
-                    //                    if answer == String(currentInfo.answer){
-                    //                        sessionScore += 1
-                    //                        currentInfo = equationShuffle(termCount: Int(sliderValue))
-                    //                        answer = ""
-                    //                    } else {
-                    //                        withAnimation(.default){
-                    //                            attempts += 1
-                    //                            answer = ""
-                    //                        }
-                    //                    }
-                    //                }
                         .foregroundColor(.white)
                         .buttonStyle(.borderedProminent)
                         .tint(buttonBackground)
@@ -127,7 +116,6 @@ struct TimedEquations: View {
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
             }
-        }
             if !equations{
                 Button("Back"){
                     presentationMode.wrappedValue.dismiss()
@@ -135,115 +123,144 @@ struct TimedEquations: View {
                 .accentColor(buttonBackground)
                 
             }
-                if equations {
-                    
-                    VStack {
-                        HStack {
-                            KeyButton(text: "1"){
-                                answer += "1"
-                            }
-                            
-                            KeyButton(text: "2"){
-                                answer += "2"
-                            }
-                            KeyButton(text: "3"){
-                                answer += "3"
-                            }
-                        }
-                        HStack {
-                            KeyButton(text: "4"){
-                                answer += "4"
-                            }
-                            
-                            KeyButton(text: "5"){
-                                answer += "5"
-                            }
-                            KeyButton(text: "6"){
-                                answer += "6"
-                            }
-                        }
-                        HStack {
-                            KeyButton(text: "7"){
-                                answer += "7"
-                            }
-                            
-                            KeyButton(text: "8"){
-                                answer += "8"
-                            }
-                            KeyButton(text: "9"){
-                                answer += "9"
-                            }
-                            
-                        }
-                        HStack {
-                            
-                            KeyButton(text: "-"){
-                                answer += "-"
-                            }
-                            KeyButton(text: "C"){
-                                answer = ""
-                                withAnimation(.default){
-                                    attempts += 1
-                                    answer = ""
-                                }
-                                }
-                            KeyButton(text: "End"){
-                                equations = false
-                                // Check if user has a score higher than their previous, if so, updates their high score.
-                                if sessionScore > timedHighScore{
-                                    timedHighScore = sessionScore                        }
-                            }
-                        }
-                    }
-                    .transition(.slideInFromBottom)
-                  //  .animation(.spring())
-
-                }
-                //        .onTapGesture {
-                //            withAnimation {
-                //                equations.toggle()
-                //            }
-                //
-                //        }
-            }
+            
         }
-    struct KeyButton: View {
-        @State private var isAnimating = false
-        
-        var text: String
-        var action: () -> Void
-        
-        var body: some View {
-            ZStack {
+        if equations {
+            VStack {
+                HStack {
+                    Button(action: {
+                        answer += "1"
+                    }) {
+                        Text("1")
+                    }
+                    .buttonStyle(KeyButton())
+                    
+                    Button(action: {
+                        answer += "2"
+                    }) {
+                        Text("2")
+                    }
+                    .buttonStyle(KeyButton())
+                    Button(action: {
+                        answer += "3"
+                    }) {
+                        Text("3")
+                    }
+                    .buttonStyle(KeyButton())
+                }
+                HStack {
+                    Button(action: {
+                        answer += "4"
+                    }) {
+                        Text("4")
+                    }
+                    .buttonStyle(KeyButton())
+                    
+                    Button(action: {
+                        answer += "5"
+                    }) {
+                        Text("5")
+                    }
+                    .buttonStyle(KeyButton())
+                    Button(action: {
+                        answer += "6"
+                    }) {
+                        Text("6")
+                    }
+                    .buttonStyle(KeyButton())
+                }
+                HStack {
+                    Button(action: {
+                        answer += "7"
+                    }) {
+                        Text("7")
+                    }
+                    .buttonStyle(KeyButton())
+                    
+                    Button(action: {
+                        answer += "8"
+                    }) {
+                        Text("8")
+                    }
+                    .buttonStyle(KeyButton())
+                    Button(action: {
+                        answer += "9"
+                    }) {
+                        Text("9")
+                    }
+                    .buttonStyle(KeyButton())
+                }
+                HStack {
+                    Button(action: {
+                        answer += "-"
+                    }) {
+                        Text("-")
+                    }
+                    .buttonStyle(KeyButton())
+                    
+                    Button(action: {
+                        answer = ""
+                        withAnimation(.default){
+                            attempts += 1
+                            answer = ""
+                        }
+                        
+                    }) {
+                        Text("C")
+                    }
+                    .buttonStyle(KeyButton())
+                    Button(action: {
+                        withAnimation(.none) {
+                            equations = false
+                        }
+                        if sessionScore > timedHighScore {
+                            timedHighScore = sessionScore
+                        }
+                    }) {
+                        Text("End")
+                    }
+                    .buttonStyle(KeyButton())
+                }
+                
+            }
+            .transition(.slideInFromBottom)
+            .animation(.none)
+        }
+    }
+}
+struct KeyButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(width: 75, height: 75)
+            .scaleEffect(configuration.isPressed ? 0.8 : 1.0)
+            .background(
                 RoundedRectangle(cornerRadius: 20, style: .circular)
                     .foregroundColor(Color("buttonBackground"))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
                             .stroke(Color("foregroundTwo"), lineWidth: 4)
                     )
-                    .frame(width: isAnimating ? 65 : 75, height: isAnimating ? 65 : 75)
-                    .scaleEffect(isAnimating ? 0.8 : 1.0) // Apply the scaling effect on tap
-                
-                Text(text)
-                    .bold()
-                    .font(.title)
-                    .fontWeight(.heavy)
-                    .foregroundColor(Color("foregroundTwo"))
-            }
-            .onTapGesture {
-                action()
-                isAnimating = true // Shrink the button on tap
-                
-                // Reset the animation after a short delay
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    isAnimating = false
-                }
-            }
-            .animation(.spring()) // Apply animation to the whole view
-        }
+            )
+            .foregroundColor(Color("foregroundTwo"))
+            .font(.title)
+            .fontWeight(.heavy)
+            .animation(.spring())
     }
-    
-    
-    
-    
-    
+}
+
+
+
+
+// Saving for later
+//                Button("Submit"){
+//                    if answer == String(currentInfo.answer){
+//                        sessionScore += 1
+//                        currentInfo = equationShuffle(termCount: Int(sliderValue))
+//                        answer = ""
+//                    } else {
+//                        withAnimation(.default){
+//                            attempts += 1
+//                            answer = ""
+//                        }
+//                    }
+//                }
