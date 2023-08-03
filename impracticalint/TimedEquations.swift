@@ -22,6 +22,7 @@ extension AnyTransition {
 
 
 struct TimedEquations: View {
+    @State var shouldAnimateCheckmark = false
     @State var timeRemaining = 60
     @State var sessionScore = 0
     @State var sliderValue: Float = 2.0
@@ -65,7 +66,8 @@ struct TimedEquations: View {
                   })
             }else{
                 GameScreen(
-                       timeRemaining: $timeRemaining,
+                    shouldAnimateCheckmark: $shouldAnimateCheckmark,
+                    timeRemaining: $timeRemaining,
                        timedHighScore: $timedHighScore,
                        answer: $answer,
                        attempts: $attempts,
@@ -75,6 +77,7 @@ struct TimedEquations: View {
                        endGame: {
                            self.endGame(animated: true)
                        })
+                AnimatedCheckmarkView(isAnimating: $shouldAnimateCheckmark)
                 Keypad(answer: $answer,
                        attempts: $attempts,
                        endGame: {
@@ -106,6 +109,7 @@ struct KeyButton: ButtonStyle {
     }
 }
 private struct GameScreen: View{
+    @Binding var shouldAnimateCheckmark: Bool
     @Binding var timeRemaining: Int
     @Binding var timedHighScore: Int
     @Binding var answer: String
@@ -117,6 +121,8 @@ private struct GameScreen: View{
     var endGame: () -> Void
     let buttonBackground = Color("buttonBackground")
     @Environment(\.presentationMode) var presentationMode
+    let systemSoundID: SystemSoundID = 1407
+    
     var body: some View{
         VStack{
             Image(systemName: "clock.fill")
@@ -125,7 +131,7 @@ private struct GameScreen: View{
             Text(String(timeRemaining))
                 .font(.largeTitle)
                 .fontWeight(.heavy)
-                .onReceive(countdown) { _ in // Use countdown directly here
+                .onReceive(countdown) { _ in
                     if timeRemaining > 0 {
                         timeRemaining -= 1
                     } else {
@@ -142,12 +148,19 @@ private struct GameScreen: View{
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
                 .onChange(of: answer) { newValue in
-                    // Check the answer and update sessionScore if correct
                     if let userAnswer = Int(newValue),
                        userAnswer == currentInfo.answer {
-                        sessionScore += 1
-                        currentInfo = equationShuffle(termCount: Int(sliderValue))
-                        answer = ""
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            AudioServicesPlaySystemSound(systemSoundID)
+                            shouldAnimateCheckmark = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                                shouldAnimateCheckmark = false
+                            }
+                            print(shouldAnimateCheckmark)
+                            sessionScore += 1
+                            currentInfo = equationShuffle(termCount: Int(sliderValue))
+                            answer = ""
+                        }
                     }
                 }
         }
@@ -301,4 +314,28 @@ struct Keypad: View{
     }
 }
 
+
+struct AnimatedCheckmarkView: View {
+    @Binding var isAnimating: Bool
+    
+    var body: some View {
+        Image(systemName: "checkmark.circle.fill")
+            .foregroundColor(.green)
+            .font(.system(size: 60))
+            .opacity(isAnimating ? 1.0 : 0.0)
+            .scaleEffect(isAnimating ? 1.0 : 0.2)
+            .animation(
+                isAnimating ?
+                    Animation.spring(response: 0.5, dampingFraction: 0.5)
+                    : .default
+            )
+            .onAppear {
+                if isAnimating {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        isAnimating = false
+                    }
+                }
+            }
+    }
+}
 
