@@ -34,6 +34,21 @@ struct TimedEquations: View {
     @Environment(\.presentationMode) var presentationMode
     let buttonBackground = Color("buttonBackground")
 
+    private func verifyAnswer(){
+        // Saving for later
+        //                Button("Submit"){
+        //                    if answer == String(currentInfo.answer){
+        //                        sessionScore += 1
+        //                        currentInfo = equationShuffle(termCount: Int(sliderValue))
+        //                        answer = ""
+        //                    } else {
+        //                        withAnimation(.default){
+        //                            attempts += 1
+        //                            answer = ""
+        //                        }
+        //                    }
+        //                }
+    }
     private func endGame(animated: Bool){
         if animated{
             withAnimation(.none) {
@@ -68,6 +83,8 @@ struct TimedEquations: View {
                        timedHighScore: $timedHighScore,
                        answer: $answer,
                        attempts: $attempts,
+                       sessionScore: $sessionScore,
+                       sliderValue: $sliderValue,
                        currentInfo: $currentInfo,
                        endGame: {
                            self.endGame(animated: true)
@@ -107,6 +124,8 @@ private struct GameScreen: View{
     @Binding var timedHighScore: Int
     @Binding var answer: String
     @Binding var attempts: Int
+    @Binding var sessionScore: Int
+    @Binding var sliderValue: Float
     @Binding var currentInfo: equationInfo
     private let countdown = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     var endGame: () -> Void
@@ -136,6 +155,15 @@ private struct GameScreen: View{
                 .foregroundColor(.white)
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
+                .onChange(of: answer) { newValue in
+                    // Check the answer and update sessionScore if correct
+                    if let userAnswer = Int(newValue),
+                       userAnswer == currentInfo.answer {
+                        sessionScore += 1
+                        currentInfo = equationShuffle(termCount: Int(sliderValue))
+                        answer = ""
+                    }
+                }
         }
         .transition(.slideInFromBottom)
         .animation(.spring())
@@ -287,16 +315,4 @@ struct Keypad: View{
     }
 }
 
-// Saving for later
-//                Button("Submit"){
-//                    if answer == String(currentInfo.answer){
-//                        sessionScore += 1
-//                        currentInfo = equationShuffle(termCount: Int(sliderValue))
-//                        answer = ""
-//                    } else {
-//                        withAnimation(.default){
-//                            attempts += 1
-//                            answer = ""
-//                        }
-//                    }
-//                }
+
