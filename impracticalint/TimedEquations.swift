@@ -77,7 +77,8 @@ struct TimedEquations: View {
                        endGame: {
                            self.endGame(animated: true)
                        })
-                AnimatedCheckmarkView(isAnimating: $shouldAnimateCheckmark)
+                Spacer()
+                    .frame(maxHeight: 30)
                 Keypad(answer: $answer,
                        attempts: $attempts,
                        endGame: {
@@ -138,13 +139,14 @@ private struct GameScreen: View{
                         self.endGame()
                     }
                 }
+            
+            AnimatedCheckmarkView(isAnimating: $shouldAnimateCheckmark)
             Text(currentInfo.displayText)
             TextField("Answer", text: $answer)
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(.headline)
+                .fontWeight(.heavy)
                 .modifier(jiggleEffect(animatableData: CGFloat(attempts)))
                 .multilineTextAlignment(.center)
-                .foregroundColor(.white)
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
                 .onChange(of: answer) { newValue in
@@ -287,7 +289,12 @@ struct Keypad: View{
                         Text("-")
                     }
                     .buttonStyle(KeyButton())
-                    
+                    Button(action: {
+                        answer += "0"
+                    }) {
+                        Text("0")
+                    }
+                    .buttonStyle(KeyButton())
                     Button(action: {
                         answer = ""
                         withAnimation(.default){
@@ -299,13 +306,15 @@ struct Keypad: View{
                         Text("C")
                     }
                     .buttonStyle(KeyButton())
-                    Button(action: {
-                        self.endGame()
-                    }) {
-                        Text("End")
-                    }
-                    .buttonStyle(KeyButton())
+
                 }
+//                    Button(action: {
+//                        self.endGame()
+//                    }) {
+//                        Text("End")
+//                    }
+//                    .buttonStyle(KeyButton())
+//                }
                 
             }
             .transition(.slideInFromBottom)
