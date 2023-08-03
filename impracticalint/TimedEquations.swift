@@ -34,21 +34,6 @@ struct TimedEquations: View {
     @Environment(\.presentationMode) var presentationMode
     let buttonBackground = Color("buttonBackground")
 
-    private func verifyAnswer(){
-        // Saving for later
-        //                Button("Submit"){
-        //                    if answer == String(currentInfo.answer){
-        //                        sessionScore += 1
-        //                        currentInfo = equationShuffle(termCount: Int(sliderValue))
-        //                        answer = ""
-        //                    } else {
-        //                        withAnimation(.default){
-        //                            attempts += 1
-        //                            answer = ""
-        //                        }
-        //                    }
-        //                }
-    }
     private func endGame(animated: Bool){
         if animated{
             withAnimation(.none) {
@@ -68,6 +53,7 @@ struct TimedEquations: View {
         currentInfo = equationShuffle(termCount: Int(sliderValue))
         timeRemaining = 60
     }
+    
     var body: some View {
         VStack {
             if !equations{
