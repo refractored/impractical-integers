@@ -34,8 +34,6 @@ struct TimedEquations: View {
     @Environment(\.presentationMode) var presentationMode
     let buttonBackground = Color("buttonBackground")
 
-
-
     private func endGame(animated: Bool){
         if animated{
             withAnimation(.none) {
@@ -56,33 +54,30 @@ struct TimedEquations: View {
         timeRemaining = 60
     }
     var body: some View {
-        
-        
         VStack {
-            
             if !equations{
-                MenuScreen(sliderValue: $sliderValue, timedHighScore: $timedHighScore, startGame: {
+                MenuScreen(
+                    sliderValue: $sliderValue,
+                    timedHighScore: $timedHighScore,
+                    startGame: {
                       self.startGame()
                   })
-            }
-            if equations {
+            }else{
                 GameScreen(
                        timeRemaining: $timeRemaining,
                        timedHighScore: $timedHighScore,
                        answer: $answer,
                        attempts: $attempts,
                        currentInfo: $currentInfo,
-                   //    countdown: countdown,
                        endGame: {
                            self.endGame(animated: true)
-                       }
-                   )
+                       })
+                Keypad(answer: $answer,
+                       attempts: $attempts,
+                       endGame: {
+                      self.endGame(animated: true)
+                  })
             }
-        }
-        if equations {
-            Keypad(answer: $answer, attempts: $attempts, endGame: {
-                  self.endGame(animated: true)
-              })
         }
         }
     
