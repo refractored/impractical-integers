@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		200AFCD92A7B5EFE00D181A9 /* SlideButton in Frameworks */ = {isa = PBXBuildFile; productRef = 200AFCD82A7B5EFE00D181A9 /* SlideButton */; };
 		51C47F38299E9A2E004AB819 /* impracticalintApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C47F37299E9A2E004AB819 /* impracticalintApp.swift */; };
 		51C47F3A299E9A2E004AB819 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C47F39299E9A2E004AB819 /* HomeScreen.swift */; };
 		51C47F3C299E9A2F004AB819 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51C47F3B299E9A2F004AB819 /* Assets.xcassets */; };
@@ -98,6 +99,7 @@
 				D0D96A842A757E7A009655A8 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				D0D96A8A2A757E7A009655A8 /* FirebaseAuth in Frameworks */,
 				D0D96A8E2A757E7A009655A8 /* FirebaseCrashlytics in Frameworks */,
+				200AFCD92A7B5EFE00D181A9 /* SlideButton in Frameworks */,
 				D0D96AAE2A757E7A009655A8 /* FirebaseRemoteConfigSwift in Frameworks */,
 				D0D96AA02A757E7A009655A8 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				D0D96A922A757E7A009655A8 /* FirebaseDatabaseSwift in Frameworks */,
@@ -237,6 +239,7 @@
 				D0D96AAD2A757E7A009655A8 /* FirebaseRemoteConfigSwift */,
 				D0D96AAF2A757E7A009655A8 /* FirebaseStorage */,
 				D0D96AB12A757E7A009655A8 /* FirebaseStorageCombine-Community */,
+				200AFCD82A7B5EFE00D181A9 /* SlideButton */,
 			);
 			productName = impracticalint;
 			productReference = 51C47F34299E9A2E004AB819 /* impracticalint.app */;
@@ -312,6 +315,7 @@
 			mainGroup = 51C47F2B299E9A2E004AB819;
 			packageReferences = (
 				D0D96A7C2A757E7A009655A8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				200AFCD72A7B5EFE00D181A9 /* XCRemoteSwiftPackageReference "SlideButton" */,
 			);
 			productRefGroup = 51C47F35299E9A2E004AB819 /* Products */;
 			projectDirPath = "";
@@ -687,6 +691,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		200AFCD72A7B5EFE00D181A9 /* XCRemoteSwiftPackageReference "SlideButton" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/no-comment/SlideButton";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		D0D96A7C2A757E7A009655A8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -698,6 +710,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		200AFCD82A7B5EFE00D181A9 /* SlideButton */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 200AFCD72A7B5EFE00D181A9 /* XCRemoteSwiftPackageReference "SlideButton" */;
+			productName = SlideButton;
+		};
 		D0D96A7D2A757E7A009655A8 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D0D96A7C2A757E7A009655A8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

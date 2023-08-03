@@ -84,6 +84,23 @@ struct TimedEquations: View {
                        endGame: {
                       self.endGame(animated: true)
                   })
+//                Button("End"){
+//
+//                }
+//                .frame(width: 240, height: 75)
+////                .scaleEffect(configuration.isPressed ? 0.8 : 1.0)
+//                .background(
+//                    RoundedRectangle(cornerRadius: 20, style: .circular)
+//                        .foregroundColor(Color("buttonBackground"))
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 16)
+//                                .stroke(Color("foregroundTwo"), lineWidth: 4)
+//                        )
+//                )
+//                .foregroundColor(Color("foregroundTwo"))
+//                .font(.title)
+//                .fontWeight(.heavy)
+//                .animation(.spring())
             }
         }
         }
@@ -215,6 +232,8 @@ private struct MenuScreen: View{
 struct Keypad: View{
     @Binding var answer: String
     @Binding var attempts: Int
+    let systemSoundID: SystemSoundID = 1306
+
     var endGame: () -> Void
     
     var body: some View{
@@ -222,6 +241,7 @@ struct Keypad: View{
                 HStack {
                     Button(action: {
                         answer += "1"
+                        AudioServicesPlaySystemSound(systemSoundID)
                     }) {
                         Text("1")
                     }
@@ -308,14 +328,24 @@ struct Keypad: View{
                     .buttonStyle(KeyButton())
 
                 }
-//                    Button(action: {
-//                        self.endGame()
-//                    }) {
-//                        Text("End")
-//                    }
-//                    .buttonStyle(KeyButton())
-//                }
-                
+                HStack {
+                    Button("End"){
+                        endGame()
+                    }
+                        .frame(width: 245, height: 75)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20, style: .circular)
+                                .foregroundColor(Color("buttonBackground"))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color("foregroundTwo"), lineWidth: 4)
+                                )
+                        )
+                        .foregroundColor(Color("foregroundTwo"))
+                        .font(.title)
+                        .fontWeight(.heavy)
+                        .animation(.spring())
+                }
             }
             .transition(.slideInFromBottom)
             .animation(.none)
@@ -347,4 +377,3 @@ struct AnimatedCheckmarkView: View {
             }
     }
 }
-
