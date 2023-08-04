@@ -34,8 +34,12 @@ struct TimedEquations: View {
     @AppStorage("correct") private var timedHighScore = -1
     @Environment(\.presentationMode) var presentationMode
     let buttonBackground = Color("buttonBackground")
+    let endSoundEffect: SystemSoundID = 1112
+    let startSoundEffect: SystemSoundID = 1110
 
     private func endGame(animated: Bool){
+        answer = ""
+        AudioServicesPlaySystemSound(endSoundEffect)
         if animated{
             withAnimation(.none) {
                 equations = false
@@ -49,6 +53,8 @@ struct TimedEquations: View {
     }
     
     private func startGame(){
+        answer = ""
+        AudioServicesPlaySystemSound(startSoundEffect)
         equations = true
         sessionScore = 0
         currentInfo = equationShuffle(termCount: Int(sliderValue))
@@ -234,26 +240,31 @@ struct Keypad: View{
     @Binding var attempts: Int
     let systemSoundID: SystemSoundID = 1306
 
+
     var endGame: () -> Void
     
     var body: some View{
             VStack {
                 HStack {
                     Button(action: {
-                        answer += "1"
                         AudioServicesPlaySystemSound(systemSoundID)
+                        answer += "1"
                     }) {
                         Text("1")
                     }
                     .buttonStyle(KeyButton())
                     
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
+
                         answer += "2"
                     }) {
                         Text("2")
                     }
                     .buttonStyle(KeyButton())
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
+
                         answer += "3"
                     }) {
                         Text("3")
@@ -262,6 +273,8 @@ struct Keypad: View{
                 }
                 HStack {
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
+
                         answer += "4"
                     }) {
                         Text("4")
@@ -269,12 +282,16 @@ struct Keypad: View{
                     .buttonStyle(KeyButton())
                     
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
+
                         answer += "5"
                     }) {
                         Text("5")
                     }
                     .buttonStyle(KeyButton())
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
+
                         answer += "6"
                     }) {
                         Text("6")
@@ -283,19 +300,25 @@ struct Keypad: View{
                 }
                 HStack {
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
+
                         answer += "7"
+
                     }) {
                         Text("7")
                     }
                     .buttonStyle(KeyButton())
                     
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
+
                         answer += "8"
                     }) {
                         Text("8")
                     }
                     .buttonStyle(KeyButton())
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
                         answer += "9"
                     }) {
                         Text("9")
@@ -304,18 +327,23 @@ struct Keypad: View{
                 }
                 HStack {
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
+
                         answer += "-"
                     }) {
                         Text("-")
                     }
                     .buttonStyle(KeyButton())
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
+
                         answer += "0"
                     }) {
                         Text("0")
                     }
                     .buttonStyle(KeyButton())
                     Button(action: {
+                        AudioServicesPlaySystemSound(systemSoundID)
                         answer = ""
                         withAnimation(.default){
                             attempts += 1
