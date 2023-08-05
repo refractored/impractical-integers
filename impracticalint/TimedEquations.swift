@@ -19,6 +19,16 @@ extension AnyTransition {
         return .asymmetric(insertion: .identity, removal: removal)
     }
 }
+public extension View {
+    func fullBackground(imageName: String) -> some View {
+       return background(
+                Image(imageName)
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+       )
+    }
+}
 
 
 struct TimedEquations: View {
@@ -62,37 +72,44 @@ struct TimedEquations: View {
     }
     
     var body: some View {
-        VStack {
-            if !equations{
-                MenuScreen(
-                    sliderValue: $sliderValue,
-                    timedHighScore: $timedHighScore,
-                    startGame: {
-                      self.startGame()
-                  })
-            }else{
-                GameScreen(
-                    shouldAnimateCheckmark: $shouldAnimateCheckmark,
-                    timeRemaining: $timeRemaining,
-                       timedHighScore: $timedHighScore,
-                       answer: $answer,
-                       attempts: $attempts,
-                       sessionScore: $sessionScore,
-                       sliderValue: $sliderValue,
-                       currentInfo: $currentInfo,
-                       endGame: {
-                           self.endGame(animated: true)
-                       })
-                Spacer()
-                    .frame(maxHeight: 30)
-                Keypad(answer: $answer,
-                       attempts: $attempts,
-                       endGame: {
-                      self.endGame(animated: true)
-                  })
+        ZStack{
+            Image("wateriscool") // 1
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+            VStack {
+                if !equations{
+                    MenuScreen(
+                        sliderValue: $sliderValue,
+                        timedHighScore: $timedHighScore,
+                        startGame: {
+                            self.startGame()
+                        })
+                }else{
+                    GameScreen(
+                        shouldAnimateCheckmark: $shouldAnimateCheckmark,
+                        timeRemaining: $timeRemaining,
+                        timedHighScore: $timedHighScore,
+                        answer: $answer,
+                        attempts: $attempts,
+                        sessionScore: $sessionScore,
+                        sliderValue: $sliderValue,
+                        currentInfo: $currentInfo,
+                        endGame: {
+                            self.endGame(animated: true)
+                        })
+                    Spacer()
+                        .frame(maxHeight: 30)
+                    Keypad(answer: $answer,
+                           attempts: $attempts,
+                           endGame: {
+                        self.endGame(animated: true)
+                    })
+                }
             }
         }
         }
+
     
 }
 
@@ -131,6 +148,8 @@ private struct GameScreen: View{
     let systemSoundID: SystemSoundID = 1407
     
     var body: some View{
+        ZStack{
+
         VStack{
             Image(systemName: "clock.fill")
                 .imageScale(.large)
@@ -149,6 +168,7 @@ private struct GameScreen: View{
             AnimatedCheckmarkView(isAnimating: $shouldAnimateCheckmark)
             Text(currentInfo.displayText)
             TextField("Answer", text: $answer)
+                .frame(width: 180	)
                 .font(.headline)
                 .fontWeight(.heavy)
                 .modifier(jiggleEffect(animatableData: CGFloat(attempts)))
@@ -172,8 +192,12 @@ private struct GameScreen: View{
                     }
                 }
         }
+        .padding()
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 25, style: .continuous))
         .transition(.slideInFromBottom)
         .animation(.spring())
+                   }
+
     }
 }
 private struct MenuScreen: View{
@@ -185,65 +209,71 @@ private struct MenuScreen: View{
     let buttonForeground = Color("buttonForeground")
 
     var body: some View{
-        Image(systemName: "clock.fill")
-            .imageScale(.large)
-            .foregroundColor(buttonBackground)
-        VStack {
-            Text("Term Count:")
-                .font(.headline)
-            Text("\(Int(sliderValue))").font(.title2).fontWeight(.thin)
-            Slider(value: $sliderValue, in: 2...5) {
-            } minimumValueLabel: {
-                Text("2").font(.callout).fontWeight(.thin)
-            } maximumValueLabel: {
-                Text("5").font(.callout).fontWeight(.thin)
+        VStack{
+            Image(systemName: "clock.fill")
+                .imageScale(.large)
+                .foregroundColor(buttonBackground)
+            VStack {
+                Text("Term Count:")
+                    .font(.headline)
+                Text("\(Int(sliderValue))").font(.title2).fontWeight(.thin)
+                Slider(value: $sliderValue, in: 2...5) {
+                } minimumValueLabel: {
+                    Text("2").font(.callout).fontWeight(.thin)
+                } maximumValueLabel: {
+                    Text("5").font(.callout).fontWeight(.thin)
+                }
+                .frame(width: 125, height: 5)
+                
+                if timedHighScore != -1{
+                    Text("High Score:")
+                    Text("\(timedHighScore)").font(.title2).fontWeight(.thin)
+                }
+                
             }
-            .frame(width: 125, height: 5)
-            
-            if timedHighScore != -1{
-                Text("High Score:")
-                Text("\(timedHighScore)").font(.title2).fontWeight(.thin)
+            //
+            Button(action:{
+                self.startGame()
+            }) {
+                HStack {
+                    Image(systemName: "play.circle")
+                        .font(.title3)
+                    Text("Start")
+                        .font(.title3)
+                }
+                .frame(maxWidth: 320, maxHeight: 30)
+                
             }
-            
+            .foregroundColor(buttonForeground)
+            .buttonStyle(.borderedProminent)
+            .tint(buttonBackground)
+            .foregroundColor(.white)
+            .buttonStyle(.borderedProminent)
+            .tint(buttonBackground)
+            Button(action:{
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                HStack {
+                    Image(systemName: "gobackward")
+                        .font(.title3)
+                    Text("Back")
+                        .font(.title3)
+                }
+                .frame(maxWidth: 320, maxHeight: 30)
+                
+            }
+            .foregroundColor(buttonForeground)
+            .buttonStyle(.borderedProminent)
+            .tint(buttonBackground)
+            .foregroundColor(.white)
+            .buttonStyle(.borderedProminent)
+            .tint(buttonBackground)
         }
-//
-        Button(action:{
-            self.startGame()
-        }) {
-            HStack {
-                Image(systemName: "play.circle")
-                   .font(.title3)
-                Text("Start")
-                    .font(.title3)
-            }
-            .frame(maxWidth: 320, maxHeight: 30)
-
-        }
-        .foregroundColor(buttonForeground)
-        .buttonStyle(.borderedProminent)
-        .tint(buttonBackground)
-        .foregroundColor(.white)
-        .buttonStyle(.borderedProminent)
-        .tint(buttonBackground)
-        Button(action:{
-            presentationMode.wrappedValue.dismiss()
-        }) {
-            HStack {
-                Image(systemName: "gobackward")
-                   .font(.title3)
-                Text("Back")
-                    .font(.title3)
-            }
-            .frame(maxWidth: 320, maxHeight: 30)
-
-        }
-        .foregroundColor(buttonForeground)
-        .buttonStyle(.borderedProminent)
-        .tint(buttonBackground)
-        .foregroundColor(.white)
-        .buttonStyle(.borderedProminent)
-        .tint(buttonBackground)
-        
+        .padding()
+        .background(
+                            .ultraThinMaterial,
+                            in: RoundedRectangle(cornerRadius: 25, style: .continuous)
+                        )
     }
 }
 struct Keypad: View{
@@ -386,8 +416,11 @@ struct Keypad: View{
                         .animation(.spring())
                 }
             }
+            .padding()
+            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 25, style: .continuous))
             .transition(.slideInFromBottom)
             .animation(.none)
+
     
     }
 }
@@ -414,5 +447,11 @@ struct AnimatedCheckmarkView: View {
                     }
                 }
             }
+    }
+}
+
+struct Previews_TimedEquations_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeScreen()
     }
 }
