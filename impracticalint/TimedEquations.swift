@@ -90,23 +90,6 @@ struct TimedEquations: View {
                        endGame: {
                       self.endGame(animated: true)
                   })
-//                Button("End"){
-//
-//                }
-//                .frame(width: 240, height: 75)
-////                .scaleEffect(configuration.isPressed ? 0.8 : 1.0)
-//                .background(
-//                    RoundedRectangle(cornerRadius: 20, style: .circular)
-//                        .foregroundColor(Color("buttonBackground"))
-//                        .overlay(
-//                            RoundedRectangle(cornerRadius: 16)
-//                                .stroke(Color("foregroundTwo"), lineWidth: 4)
-//                        )
-//                )
-//                .foregroundColor(Color("foregroundTwo"))
-//                .font(.title)
-//                .fontWeight(.heavy)
-//                .animation(.spring())
             }
         }
         }
@@ -199,6 +182,7 @@ private struct MenuScreen: View{
     var startGame: () -> Void
     let buttonBackground = Color("buttonBackground")
     @Environment(\.presentationMode) var presentationMode
+    let buttonForeground = Color("buttonForeground")
 
     var body: some View{
         Image(systemName: "clock.fill")
@@ -222,16 +206,43 @@ private struct MenuScreen: View{
             }
             
         }
-        Button("Begin") {
+//
+        Button(action:{
             self.startGame()
+        }) {
+            HStack {
+                Image(systemName: "play.circle")
+                   .font(.title3)
+                Text("Start")
+                    .font(.title3)
+            }
+            .frame(maxWidth: 320, maxHeight: 30)
+
         }
+        .foregroundColor(buttonForeground)
+        .buttonStyle(.borderedProminent)
+        .tint(buttonBackground)
         .foregroundColor(.white)
         .buttonStyle(.borderedProminent)
         .tint(buttonBackground)
-        Button("Back"){
+        Button(action:{
             presentationMode.wrappedValue.dismiss()
+        }) {
+            HStack {
+                Image(systemName: "gobackward")
+                   .font(.title3)
+                Text("Back")
+                    .font(.title3)
+            }
+            .frame(maxWidth: 320, maxHeight: 30)
+
         }
-        .accentColor(buttonBackground)
+        .foregroundColor(buttonForeground)
+        .buttonStyle(.borderedProminent)
+        .tint(buttonBackground)
+        .foregroundColor(.white)
+        .buttonStyle(.borderedProminent)
+        .tint(buttonBackground)
         
     }
 }
