@@ -19,16 +19,6 @@ extension AnyTransition {
         return .asymmetric(insertion: .identity, removal: removal)
     }
 }
-public extension View {
-    func fullBackground(imageName: String) -> some View {
-       return background(
-                Image(imageName)
-                    .resizable()
-                    .scaledToFill()
-                    .edgesIgnoringSafeArea(.all)
-       )
-    }
-}
 
 
 struct TimedEquations: View {
@@ -276,152 +266,75 @@ private struct MenuScreen: View{
                         )
     }
 }
-struct Keypad: View{
+struct Keypad: View {
     @Binding var answer: String
     @Binding var attempts: Int
     let systemSoundID: SystemSoundID = 1306
 
-
     var endGame: () -> Void
-    
-    var body: some View{
-            VStack {
+
+    var body: some View {
+        VStack {
+            ForEach(0..<3) { row in
                 HStack {
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-                        answer += "1"
-                    }) {
-                        Text("1")
-                    }
-                    .buttonStyle(KeyButton())
-                    
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-
-                        answer += "2"
-                    }) {
-                        Text("2")
-                    }
-                    .buttonStyle(KeyButton())
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-
-                        answer += "3"
-                    }) {
-                        Text("3")
-                    }
-                    .buttonStyle(KeyButton())
-                }
-                HStack {
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-
-                        answer += "4"
-                    }) {
-                        Text("4")
-                    }
-                    .buttonStyle(KeyButton())
-                    
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-
-                        answer += "5"
-                    }) {
-                        Text("5")
-                    }
-                    .buttonStyle(KeyButton())
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-
-                        answer += "6"
-                    }) {
-                        Text("6")
-                    }
-                    .buttonStyle(KeyButton())
-                }
-                HStack {
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-
-                        answer += "7"
-
-                    }) {
-                        Text("7")
-                    }
-                    .buttonStyle(KeyButton())
-                    
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-
-                        answer += "8"
-                    }) {
-                        Text("8")
-                    }
-                    .buttonStyle(KeyButton())
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-                        answer += "9"
-                    }) {
-                        Text("9")
-                    }
-                    .buttonStyle(KeyButton())
-                }
-                HStack {
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-
-                        answer += "-"
-                    }) {
-                        Text("-")
-                    }
-                    .buttonStyle(KeyButton())
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-
-                        answer += "0"
-                    }) {
-                        Text("0")
-                    }
-                    .buttonStyle(KeyButton())
-                    Button(action: {
-                        AudioServicesPlaySystemSound(systemSoundID)
-                        answer = ""
-                        withAnimation(.default){
-                            attempts += 1
-                            answer = ""
+                    ForEach(1...3, id: \.self) { number in
+                        Button(action: {
+                            AudioServicesPlaySystemSound(systemSoundID)
+                            answer += "\(number + row * 3)"
+                        }) {
+                            Text("\(number + row * 3)")
                         }
-                        
-                    }) {
-                        Text("C")
+                        .buttonStyle(KeyButton())
                     }
-                    .buttonStyle(KeyButton())
-
-                }
-                HStack {
-                    Button("End"){
-                        endGame()
-                    }
-                        .frame(width: 245, height: 75)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20, style: .circular)
-                                .foregroundColor(Color("buttonBackground"))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .stroke(Color("foregroundTwo"), lineWidth: 4)
-                                )
-                        )
-                        .foregroundColor(Color("foregroundTwo"))
-                        .font(.title)
-                        .fontWeight(.heavy)
-                        .animation(.spring())
                 }
             }
-            .padding()
-            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 25, style: .continuous))
-            .transition(.slideInFromBottom)
-            .animation(.none)
-
-    
+            HStack {
+                Button(action: {
+                    AudioServicesPlaySystemSound(systemSoundID)
+                    answer += "-"
+                }) {
+                    Text("-")
+                }
+                .buttonStyle(KeyButton())
+                Button(action: {
+                    AudioServicesPlaySystemSound(systemSoundID)
+                    answer += "0"
+                }) {
+                    Text("0")
+                }
+                .buttonStyle(KeyButton())
+                Button(action: {
+                    AudioServicesPlaySystemSound(systemSoundID)
+                    answer = ""
+                    withAnimation(.default) {
+                        attempts += 1
+                        answer = ""
+                    }
+                }) {
+                    Text("C")
+                }
+                .buttonStyle(KeyButton())
+            }
+            Button("End") {
+                endGame()
+            }
+            .frame(width: 245, height: 75)
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .circular)
+                    .foregroundColor(Color("buttonBackground"))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color("foregroundTwo"), lineWidth: 4)
+                    )
+            )
+            .foregroundColor(Color("foregroundTwo"))
+            .font(.title)
+            .fontWeight(.heavy)
+            .animation(.spring())
+        }
+        .padding()
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+        .transition(.slideInFromBottom)
     }
 }
 
