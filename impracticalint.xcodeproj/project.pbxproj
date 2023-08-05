@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		200AFCD92A7B5EFE00D181A9 /* SlideButton in Frameworks */ = {isa = PBXBuildFile; productRef = 200AFCD82A7B5EFE00D181A9 /* SlideButton */; };
+		20452E0C2A83EF5200694A54 /* PopupView in Frameworks */ = {isa = PBXBuildFile; productRef = 20452E0B2A83EF5200694A54 /* PopupView */; };
 		51C47F38299E9A2E004AB819 /* impracticalintApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C47F37299E9A2E004AB819 /* impracticalintApp.swift */; };
 		51C47F3A299E9A2E004AB819 /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51C47F39299E9A2E004AB819 /* HomeScreen.swift */; };
 		51C47F3C299E9A2F004AB819 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51C47F3B299E9A2F004AB819 /* Assets.xcassets */; };
@@ -100,6 +101,7 @@
 				D0D96A8A2A757E7A009655A8 /* FirebaseAuth in Frameworks */,
 				D0D96A8E2A757E7A009655A8 /* FirebaseCrashlytics in Frameworks */,
 				200AFCD92A7B5EFE00D181A9 /* SlideButton in Frameworks */,
+				20452E0C2A83EF5200694A54 /* PopupView in Frameworks */,
 				D0D96AAE2A757E7A009655A8 /* FirebaseRemoteConfigSwift in Frameworks */,
 				D0D96AA02A757E7A009655A8 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				D0D96A922A757E7A009655A8 /* FirebaseDatabaseSwift in Frameworks */,
@@ -240,6 +242,7 @@
 				D0D96AAF2A757E7A009655A8 /* FirebaseStorage */,
 				D0D96AB12A757E7A009655A8 /* FirebaseStorageCombine-Community */,
 				200AFCD82A7B5EFE00D181A9 /* SlideButton */,
+				20452E0B2A83EF5200694A54 /* PopupView */,
 			);
 			productName = impracticalint;
 			productReference = 51C47F34299E9A2E004AB819 /* impracticalint.app */;
@@ -316,6 +319,7 @@
 			packageReferences = (
 				D0D96A7C2A757E7A009655A8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				200AFCD72A7B5EFE00D181A9 /* XCRemoteSwiftPackageReference "SlideButton" */,
+				20452E0A2A83EF5200694A54 /* XCRemoteSwiftPackageReference "PopupView" */,
 			);
 			productRefGroup = 51C47F35299E9A2E004AB819 /* Products */;
 			projectDirPath = "";
@@ -699,6 +703,14 @@
 				kind = branch;
 			};
 		};
+		20452E0A2A83EF5200694A54 /* XCRemoteSwiftPackageReference "PopupView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/PopupView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.0;
+			};
+		};
 		D0D96A7C2A757E7A009655A8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -714,6 +726,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 200AFCD72A7B5EFE00D181A9 /* XCRemoteSwiftPackageReference "SlideButton" */;
 			productName = SlideButton;
+		};
+		20452E0B2A83EF5200694A54 /* PopupView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 20452E0A2A83EF5200694A54 /* XCRemoteSwiftPackageReference "PopupView" */;
+			productName = PopupView;
 		};
 		D0D96A7D2A757E7A009655A8 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
