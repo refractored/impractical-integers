@@ -96,9 +96,6 @@ struct TimedEquations: View {
                 .ignoresSafeArea()
             VStack {
                 if !equations{
-                    Button("Balls"){
-                        popupPresented = true
-                    }
                     MenuScreen(
                         sliderValue: $sliderValue,
                         timedHighScore: $easyHighScore,
