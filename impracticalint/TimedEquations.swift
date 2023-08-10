@@ -32,6 +32,7 @@ struct TimedEquations: View {
     @State var answer = ""
     @State var timer = -1
     @State var currentInfo = equationInfo(terms: [Int](), answer: 0, displayText: "")
+    @State var popupPresented = false
 //    @AppStorage("correct") private var timedHighScore = -1
     @AppStorage("easyHighScore") private var easyHighScore = -1
     @AppStorage("normalHighScore") private var normalHighScore = -1
@@ -57,16 +58,22 @@ struct TimedEquations: View {
         if sliderValue == 2.0{
             if sessionScore > easyHighScore{
                 sessionScore = easyHighScore
+                sessionScore = 0
+                popupPresented = true
             }
         }
         if sliderValue == 3.0{
             if sessionScore > normalHighScore{
                 sessionScore = normalHighScore
+                sessionScore = 0
+                popupPresented = true
             }
         }
         if sliderValue == 4.0{
             if sessionScore > hardHighScore{
                 sessionScore = hardHighScore
+                sessionScore = 0
+                popupPresented = true
             }
         }
         
@@ -89,6 +96,9 @@ struct TimedEquations: View {
                 .ignoresSafeArea()
             VStack {
                 if !equations{
+                    Button("Balls"){
+                        popupPresented = true
+                    }
                     MenuScreen(
                         sliderValue: $sliderValue,
                         timedHighScore: $easyHighScore,
@@ -118,9 +128,19 @@ struct TimedEquations: View {
                 }
             }
         }
-        
+        .popup(isPresented: $popupPresented) {
+            HighScorePopup(popupPresented: $popupPresented)
+        } customize: {
+            $0
+               // .autohideIn(2)
+                .type(.toast)
+                .position(.bottom)
+                .animation(.spring())
+                .closeOnTapOutside(true)
+                .backgroundColor(.black.opacity(0.5))
         }
-
+        
+    }
     
 }
 
@@ -443,5 +463,64 @@ struct AnimatedCheckmarkView: View {
 struct Previews_TimedEquations_Previews: PreviewProvider {
     static var previews: some View {
         HomeScreen()
+    }
+}
+struct HighScorePopup: View {
+    @Binding var popupPresented: Bool
+    var body: some View {
+        ZStack{
+            Spacer()
+                .frame(height: 325)
+                .background(Color("buttonBackground"))
+                .cornerRadius(30.0)
+            VStack{
+                Text("Congratulations!")
+                    .fontWeight(.heavy)
+                    .font(.title)
+                Text("🎉")
+                    .font(.system(size: 75))
+                Text("You've beat your previous high score!")
+                    .fontWeight(.heavy)
+                    .font(.system(size: 15))
+                Text("Would you like to post this on the leaderboard?")
+                    .fontWeight(.heavy)
+                    .font(.system(size: 15))
+                Button(action:{
+                   //test
+                }) {
+                    HStack {
+                        Image(systemName: "checkmark.icloud.fill")
+                           .font(.title3)
+                        Text("Yes")
+//                            .frame(maxWidth: 200, maxHeight: 30)
+//                            .fontWeight(.semibold)
+                            .font(.title3)
+                    }
+                    .frame(maxWidth: 320, maxHeight: 30)
+
+                }
+                .foregroundColor(Color("buttonForeground"))
+                .buttonStyle(.borderedProminent)
+                .tint(Color("buttonBackground"))
+                
+                Button(action:{
+                    popupPresented = false
+                }) {
+                    HStack {
+                        Image(systemName: "arrowshape.turn.up.backward.circle.fill")
+                           .font(.title3)
+                        Text("No")
+//                            .frame(maxWidth: 200, maxHeight: 30)
+//                            .fontWeight(.semibold)
+                            .font(.title3)
+                    }
+                    .frame(maxWidth: 320, maxHeight: 30)
+
+                }
+                .foregroundColor(Color("buttonForeground"))
+                .buttonStyle(.borderedProminent)
+                .tint(.red)
+            }
+        }
     }
 }
