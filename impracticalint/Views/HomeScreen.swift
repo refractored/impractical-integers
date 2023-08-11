@@ -22,7 +22,6 @@ struct ImageOverlay: View{
                                 .font(.title2)
                                 .fontWeight(.heavy)
                                 .foregroundColor(.white)
-                            //                            .padding(6)
                                 .font(.callout)
                             Spacer()
                         }
@@ -31,7 +30,6 @@ struct ImageOverlay: View{
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.white)
-                            //                            .padding(6)
                                 .font(.callout)
                                 .multilineTextAlignment(.leading)
                                 .frame(alignment: .leading)
@@ -87,11 +85,9 @@ struct HomeScreen: View {
             Color.pink.ignoresSafeArea()
             VStack {
                 Image("math")
-
                     .resizable()
                     .cornerRadius(20)
                     .padding()
-
                     .frame(width: 400, height: 550)
                     .overlay(
                         ImageOverlay(), alignment: .topLeading
@@ -109,12 +105,11 @@ struct HomeScreen: View {
                             .font(.title3)
                     }
                     .frame(maxWidth: 320, maxHeight: 30)
-
                 }
-                
                 .foregroundColor(buttonForeground)
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
+                
                 Button(action:{
                     infiniteNavigate = true
                 }) {
@@ -130,6 +125,7 @@ struct HomeScreen: View {
                 .foregroundColor(buttonForeground)
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
+                
                 Button(action:{
                     leaderboardNavigate = true
                 }) {
@@ -146,6 +142,7 @@ struct HomeScreen: View {
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
             }
+            
             .navigate(to: TimedEquations(), when: $timedNavigate)
             .navigate(to: InfiniteEquations(), when: $infiniteNavigate)
             .navigate(to: ScoreboardView(), when: $leaderboardNavigate)
