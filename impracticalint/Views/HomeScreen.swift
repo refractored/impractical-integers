@@ -39,10 +39,6 @@ struct ImageOverlay: View{
                         }
                     }
                 }
-//                }.background(Color.black)
-//                    .opacity(0.8)
-//                    .cornerRadius(10.0)
-//                    .padding(6)
             }
         }
     }
@@ -51,7 +47,6 @@ struct ScoreOverlay: View{
     @AppStorage("correct") private var timedHighScore = -1
 
     var body: some View {
-//        HStack{
             VStack{
                 ZStack{
                     RoundedRectangle(cornerRadius: 30)
@@ -75,12 +70,10 @@ struct ScoreOverlay: View{
                 
                 }
                 .padding()
-//                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 35))
                 .fixedSize()
                 Spacer()
                     .frame(maxHeight: 25)
             }
-//        }
     }
 }
 struct HomeScreen: View {
@@ -93,13 +86,12 @@ struct HomeScreen: View {
         ZStack{
             Color.pink.ignoresSafeArea()
             VStack {
-                Image("math") // Replace `.building` with your image's name
+                Image("math")
 
                     .resizable()
                     .cornerRadius(20)
                     .padding()
-                    //.scaledToFit()
-                    // .scaleEffect(0.5)
+
                     .frame(width: 400, height: 550)
                     .overlay(
                         ImageOverlay(), alignment: .topLeading
@@ -107,12 +99,6 @@ struct HomeScreen: View {
                     .overlay(
                         ScoreOverlay(), alignment: .bottom
                     )
-                //            Image(systemName: "heart.fill")
-                //                .imageScale(.large)
-                //                .foregroundColor(.red)
-                //            Text("Hello Algebra!")
-//                Divider()
-//                    .frame(width: 200)
                 Button(action:{
                     timedNavigate = true
                 }) {
@@ -120,9 +106,6 @@ struct HomeScreen: View {
                         Image(systemName: "clock.fill")
                            .font(.title3)
                         Text("Timed")
-
-
-//                            .fontWeight(.semibold)
                             .font(.title3)
                     }
                     .frame(maxWidth: 320, maxHeight: 30)
@@ -132,14 +115,6 @@ struct HomeScreen: View {
                 .foregroundColor(buttonForeground)
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
-                
-//                Button("Infinite") {
-//                    infiniteNavigate = true
-//                }
-//                .foregroundColor(.blue)
-//                .buttonStyle(.borderedProminent)
-//                .tint(buttonBackground)
-                
                 Button(action:{
                     infiniteNavigate = true
                 }) {
@@ -147,8 +122,6 @@ struct HomeScreen: View {
                         Image(systemName: "infinity.circle.fill")
                            .font(.title3)
                         Text("Infinity")
-//                            .frame(maxWidth: 200, maxHeight: 30)
-//                            .fontWeight(.semibold)
                             .font(.title3)
                     }
                     .frame(maxWidth: 320, maxHeight: 30)
@@ -157,12 +130,6 @@ struct HomeScreen: View {
                 .foregroundColor(buttonForeground)
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
-//                Button("Leaderboard") {
-//                    leaderboardNavigate = true
-//                }
-//                .foregroundColor(.blue)
-//                .buttonStyle(.borderedProminent)
-//                .tint(buttonBackground)
                 Button(action:{
                     leaderboardNavigate = true
                 }) {
@@ -170,8 +137,6 @@ struct HomeScreen: View {
                         Image(systemName: "list.number")
                            .font(.title3)
                         Text("Leaderboard")
-//                            .frame(maxWidth: 200, maxHeight: 30)
-                        //                            .fontWeight(.semibold)
                             .font(.title3)
                     }
                     .frame(maxWidth: 320, maxHeight: 30)
