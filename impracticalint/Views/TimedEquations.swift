@@ -9,17 +9,6 @@ import SwiftUI
 import AVFoundation
 import PopupView
 
-extension AnyTransition {
-    static var slideInFromBottom: AnyTransition {
-        let insertion = AnyTransition.move(edge: .bottom).combined(with: .opacity)
-        return .asymmetric(insertion: insertion, removal: .identity)
-    }
-    
-    static var slideOutToBottom: AnyTransition {
-        let removal = AnyTransition.move(edge: .bottom).combined(with: .opacity)
-        return .asymmetric(insertion: .identity, removal: removal)
-    }
-}
 
 
 struct TimedEquations: View {
@@ -28,6 +17,7 @@ struct TimedEquations: View {
     @State var sessionScore = 0
     @State var sliderValue: Float = 2.0
     @State var attempts: Int = 0
+    @State var leaderboardNavigate = false
     @State var equations = false
     @State var answer = ""
     @State var timer = -1
@@ -54,24 +44,24 @@ struct TimedEquations: View {
             equations = false
         }
         
-        
+
         if sliderValue == 2.0{
             if sessionScore > easyHighScore{
-                sessionScore = easyHighScore
+                easyHighScore = sessionScore
                 sessionScore = 0
                 popupPresented = true
             }
         }
         if sliderValue == 3.0{
             if sessionScore > normalHighScore{
-                sessionScore = normalHighScore
+                normalHighScore = sessionScore
                 sessionScore = 0
                 popupPresented = true
             }
         }
         if sliderValue == 4.0{
             if sessionScore > hardHighScore{
-                sessionScore = hardHighScore
+                hardHighScore = sessionScore
                 sessionScore = 0
                 popupPresented = true
             }
@@ -126,7 +116,7 @@ struct TimedEquations: View {
             }
         }
         .popup(isPresented: $popupPresented) {
-            HighScorePopup(popupPresented: $popupPresented)
+            HighScorePopup(popupPresented: $popupPresented, leaderboardNavigate: $leaderboardNavigate)
         } customize: {
             $0
                // .autohideIn(2)
@@ -136,30 +126,11 @@ struct TimedEquations: View {
                 .closeOnTapOutside(true)
                 .backgroundColor(.black.opacity(0.5))
         }
-        
+        .navigate(to: ScoreboardView(), when: $leaderboardNavigate)
+
     }
-    
 }
 
-struct KeyButton: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .frame(width: 75, height: 75)
-            .scaleEffect(configuration.isPressed ? 0.8 : 1.0)
-            .background(
-                RoundedRectangle(cornerRadius: 20, style: .circular)
-                    .foregroundColor(Color("buttonBackground"))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color("foregroundTwo"), lineWidth: 4)
-                    )
-            )
-            .foregroundColor(Color("foregroundTwo"))
-            .font(.title)
-            .fontWeight(.heavy)
-            .animation(.spring())
-    }
-}
 private struct GameScreen: View{
     @Binding var shouldAnimateCheckmark: Bool
     @Binding var timeRemaining: Int
@@ -208,11 +179,10 @@ private struct GameScreen: View{
                        userAnswer == currentInfo.answer {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             AudioServicesPlaySystemSound(systemSoundID)
-                          //  shouldAnimateCheckmark = true
+                            shouldAnimateCheckmark = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                                 shouldAnimateCheckmark = false
                             }
-                            print(shouldAnimateCheckmark)
                             sessionScore += 1
                             currentInfo = equationShuffle(termCount: Int(sliderValue))
                             answer = ""
@@ -233,6 +203,10 @@ private struct GameScreen: View{
 private struct MenuScreen: View{
     @Binding var sliderValue: Float
     @Binding var timedHighScore: Int
+    @AppStorage("easyHighScore") private var easyHighScore = -1
+    @AppStorage("normalHighScore") private var normalHighScore = -1
+    @AppStorage("hardHighScore") private var hardHighScore = -1
+
     var startGame: () -> Void
     let buttonBackground = Color("buttonBackground")
     @Environment(\.presentationMode) var presentationMode
@@ -249,10 +223,39 @@ private struct MenuScreen: View{
             Spacer()
                 .frame(maxHeight: 30)
             VStack {
-                if timedHighScore != -1{
-                    Text("High Score:")
-                        .font(.title3)
-                    Text("\(timedHighScore)").font(.title2).fontWeight(.thin)
+                HStack{
+                    if easyHighScore != -1{
+                        VStack{
+                            Text("Easy")
+                                .font(.title3)
+                            Text("Top Score:")
+                                .font(.title3)
+                            Text("\(easyHighScore)").font(.title2).fontWeight(.thin)
+                                .onAppear(perform: {
+                                    print(normalHighScore)
+                                })
+                        }
+                    }
+                    if normalHighScore != -1{
+                        VStack{
+                            Text("Normal")
+                                .font(.title3)
+
+                            Text("Top Score:")
+                                .font(.title3)
+                            Text("\(normalHighScore)").font(.title2).fontWeight(.thin)
+                        }
+                    }
+                    if hardHighScore != -1{
+                        VStack{
+                            Text("Hard")
+                                .font(.title3)
+
+                            Text("Top Score:")
+                                .font(.title3)
+                            Text("\(hardHighScore)").font(.title2).fontWeight(.thin)
+                        }
+                    }
                 }
                 Spacer()
                     .frame(maxHeight: 30)
@@ -360,102 +363,6 @@ private struct MenuScreen: View{
                         )
     }
 }
-struct Keypad: View {
-    @Binding var answer: String
-    @Binding var attempts: Int
-    let systemSoundID: SystemSoundID = 1306
-
-    var endGame: () -> Void
-
-    var body: some View {
-        VStack {
-            ForEach(0..<3) { row in
-                HStack {
-                    ForEach(1...3, id: \.self) { number in
-                        Button(action: {
-                            AudioServicesPlaySystemSound(systemSoundID)
-                            answer += "\(number + row * 3)"
-                        }) {
-                            Text("\(number + row * 3)")
-                        }
-                        .buttonStyle(KeyButton())
-                    }
-                }
-            }
-            HStack {
-                Button(action: {
-                    AudioServicesPlaySystemSound(systemSoundID)
-                    answer += "-"
-                }) {
-                    Text("-")
-                }
-                .buttonStyle(KeyButton())
-                Button(action: {
-                    AudioServicesPlaySystemSound(systemSoundID)
-                    answer += "0"
-                }) {
-                    Text("0")
-                }
-                .buttonStyle(KeyButton())
-                Button(action: {
-                    AudioServicesPlaySystemSound(systemSoundID)
-                    answer = ""
-                    withAnimation(.default) {
-                        attempts += 1
-                        answer = ""
-                    }
-                }) {
-                    Text("C")
-                }
-                .buttonStyle(KeyButton())
-            }
-            Button("End") {
-                endGame()
-            }
-            .frame(width: 245, height: 75)
-            .background(
-                RoundedRectangle(cornerRadius: 20, style: .circular)
-                    .foregroundColor(Color("buttonBackground"))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color("foregroundTwo"), lineWidth: 4)
-                    )
-            )
-            .foregroundColor(Color("foregroundTwo"))
-            .font(.title)
-            .fontWeight(.heavy)
-            .animation(.spring())
-        }
-        .padding()
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 25, style: .continuous))
-        .transition(.slideInFromBottom)
-    }
-}
-
-
-struct AnimatedCheckmarkView: View {
-    @Binding var isAnimating: Bool
-    
-    var body: some View {
-        Image(systemName: "checkmark.circle.fill")
-            .foregroundColor(.green)
-            .font(.system(size: 60))
-            .opacity(isAnimating ? 1.0 : 0.0)
-            .scaleEffect(isAnimating ? 1.0 : 0.2)
-            .animation(
-                isAnimating ?
-                    Animation.spring(response: 0.5, dampingFraction: 0.5)
-                    : .default
-            )
-            .onAppear {
-                if isAnimating {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        isAnimating = false
-                    }
-                }
-            }
-    }
-}
 
 struct Previews_TimedEquations_Previews: PreviewProvider {
     static var previews: some View {
@@ -464,6 +371,7 @@ struct Previews_TimedEquations_Previews: PreviewProvider {
 }
 struct HighScorePopup: View {
     @Binding var popupPresented: Bool
+    @Binding var leaderboardNavigate: Bool
     var body: some View {
         ZStack{
             Spacer()
@@ -483,7 +391,8 @@ struct HighScorePopup: View {
                     .fontWeight(.heavy)
                     .font(.system(size: 15))
                 Button(action:{
-                   //test
+                    popupPresented = false
+                    leaderboardNavigate = true
                 }) {
                     HStack {
                         Image(systemName: "checkmark.icloud.fill")
