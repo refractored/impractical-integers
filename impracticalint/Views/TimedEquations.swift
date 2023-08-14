@@ -9,66 +9,60 @@ import SwiftUI
 import AVFoundation
 import PopupView
 
+class TimedEquationsViewModel: ObservableObject {
+    @Published var shouldAnimateCheckmark = false
+    @Published var timeRemaining = 60
+    @Published var sessionScore = 0
+    @Published var sliderValue: Float = 2.0
+    @Published var attempts: Int = 0
+    @Published var leaderboardNavigate = false
+    @Published var equations = false
+    @Published var answer = ""
+    @Published var timer = -1
+    @Published var currentInfo = equationInfo(terms: [Int](), answer: 0, displayText: "")
+    @Published var popupPresented = false
+    @AppStorage("easyHighScore") var easyHighScore = -1
+    @AppStorage("normalHighScore") var normalHighScore = -1
+    @AppStorage("hardHighScore") var hardHighScore = -1
 
+    private let endSoundEffect: SystemSoundID = 1112
+    private let startSoundEffect: SystemSoundID = 1110
 
-struct TimedEquations: View {
-    @State var shouldAnimateCheckmark = false
-    @State var timeRemaining = 60
-    @State var sessionScore = 0
-    @State var sliderValue: Float = 2.0
-    @State var attempts: Int = 0
-    @State var leaderboardNavigate = false
-    @State var equations = false
-    @State var answer = ""
-    @State var timer = -1
-    @State var currentInfo = equationInfo(terms: [Int](), answer: 0, displayText: "")
-    @State var popupPresented = false
-    @AppStorage("easyHighScore") private var easyHighScore = -1
-    @AppStorage("normalHighScore") private var normalHighScore = -1
-    @AppStorage("hardHighScore") private var hardHighScore = -1
-
-    @Environment(\.presentationMode) var presentationMode
-    let buttonBackground = Color("buttonBackground")
-    let endSoundEffect: SystemSoundID = 1112
-    let startSoundEffect: SystemSoundID = 1110
-
-    private func endGame(animated: Bool){
+    func endGame(animated: Bool) {
         answer = ""
         AudioServicesPlaySystemSound(endSoundEffect)
-        if animated{
+        if animated {
             withAnimation(.none) {
                 equations = false
             }
-        }else{
+        } else {
             equations = false
         }
-        
 
-        if sliderValue == 2.0{
-            if sessionScore > easyHighScore{
+        if sliderValue == 2.0 {
+            if sessionScore > easyHighScore {
                 easyHighScore = sessionScore
                 sessionScore = 0
                 popupPresented = true
             }
         }
-        if sliderValue == 3.0{
-            if sessionScore > normalHighScore{
+        if sliderValue == 3.0 {
+            if sessionScore > normalHighScore {
                 normalHighScore = sessionScore
                 sessionScore = 0
                 popupPresented = true
             }
         }
-        if sliderValue == 4.0{
-            if sessionScore > hardHighScore{
+        if sliderValue == 4.0 {
+            if sessionScore > hardHighScore {
                 hardHighScore = sessionScore
                 sessionScore = 0
                 popupPresented = true
             }
         }
-        
     }
-    
-    private func startGame(){
+
+    func startGame() {
         answer = ""
         AudioServicesPlaySystemSound(startSoundEffect)
         equations = true
@@ -76,71 +70,51 @@ struct TimedEquations: View {
         currentInfo = equationShuffle(termCount: Int(sliderValue))
         timeRemaining = 60
     }
-    
+
+}
+
+struct TimedEquations: View {
+    @StateObject private var viewModel = TimedEquationsViewModel()
+
     var body: some View {
-        ZStack{
-            Image("wateriscool") // 1
+        ZStack {
+            Image("wateriscool")
                 .resizable()
                 .scaledToFill()
                 .ignoresSafeArea()
             VStack {
-                if !equations{
+                if !viewModel.equations {
                     MenuScreen(
-                        sliderValue: $sliderValue,
-                        timedHighScore: $easyHighScore,
-                        startGame: {
-                            self.startGame()
-                        })
-                }else{
-                    GameScreen(
-                        shouldAnimateCheckmark: $shouldAnimateCheckmark,
-                        timeRemaining: $timeRemaining,
-                        timedHighScore: $easyHighScore,
-                        answer: $answer,
-                        attempts: $attempts,
-                        sessionScore: $sessionScore,
-                        sliderValue: $sliderValue,
-                        currentInfo: $currentInfo,
-                        endGame: {
-                            self.endGame(animated: true)
-                        })
-                    Spacer()
-                        .frame(maxHeight: 30)
-                    Keypad(answer: $answer,
-                           attempts: $attempts,
-                           endGame: {
-                        self.endGame(animated: true)
+                        sliderValue: $viewModel.sliderValue,
+                        timedHighScore: $viewModel.easyHighScore,
+                        startGame: viewModel.startGame
+                    )
+                } else {
+                    GameScreen()
+                    Spacer().frame(maxHeight: 30)
+                    Keypad(answer: $viewModel.answer, attempts: viewModel.attempts, endGame:{
+                        viewModel.endGame(animated: true)
                     })
                 }
             }
         }
-        .popup(isPresented: $popupPresented) {
-            HighScorePopup(popupPresented: $popupPresented, leaderboardNavigate: $leaderboardNavigate)
-        } customize: {
-            $0
-               // .autohideIn(2)
-                .type(.toast)
+        .popup(isPresented: $viewModel.popupPresented) {
+            HighScorePopup(popupPresented: $viewModel.popupPresented, leaderboardNavigate: $viewModel.leaderboardNavigate)
+        } customize: { popup in
+            popup.type(.toast)
                 .position(.bottom)
                 .animation(.spring())
                 .closeOnTapOutside(true)
                 .backgroundColor(.black.opacity(0.5))
         }
-        .navigate(to: ScoreboardView(), when: $leaderboardNavigate)
-
+        .navigate(to: ScoreboardView(), when: $viewModel.leaderboardNavigate)
     }
 }
 
+
 private struct GameScreen: View{
-    @Binding var shouldAnimateCheckmark: Bool
-    @Binding var timeRemaining: Int
-    @Binding var timedHighScore: Int
-    @Binding var answer: String
-    @Binding var attempts: Int
-    @Binding var sessionScore: Int
-    @Binding var sliderValue: Float
-    @Binding var currentInfo: equationInfo
+    @StateObject private var viewModel = TimedEquationsViewModel()
     private let countdown = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    var endGame: () -> Void
     let buttonBackground = Color("buttonBackground")
     @Environment(\.presentationMode) var presentationMode
     let systemSoundID: SystemSoundID = 1407
@@ -152,39 +126,39 @@ private struct GameScreen: View{
             Image(systemName: "clock.fill")
                 .imageScale(.large)
                 .foregroundColor(buttonBackground)
-            Text(String(timeRemaining))
+            Text(String(viewModel.timeRemaining))
                 .font(.largeTitle)
                 .fontWeight(.heavy)
                 .onReceive(countdown) { _ in
-                    if timeRemaining > 0 {
-                        timeRemaining -= 1
+                    if viewModel.timeRemaining > 0 {
+                        viewModel.timeRemaining -= 1
                     } else {
-                        self.endGame()
+                        viewModel.endGame(animated: true)
                     }
                 }
             
-            AnimatedCheckmarkView(isAnimating: $shouldAnimateCheckmark)
-            Text(currentInfo.displayText)
-            TextField("Answer", text: $answer)
+            AnimatedCheckmarkView(isAnimating: $viewModel.shouldAnimateCheckmark)
+            Text(viewModel.currentInfo.displayText)
+            TextField("Answer", text: $viewModel.answer)
                 .frame(width: 180	)
                 .font(.headline)
                 .fontWeight(.heavy)
-                .modifier(jiggleEffect(animatableData: CGFloat(attempts)))
+                .modifier(jiggleEffect(animatableData: CGFloat(viewModel.attempts)))
                 .multilineTextAlignment(.center)
                 .buttonStyle(.borderedProminent)
                 .tint(buttonBackground)
-                .onChange(of: answer) { newValue in
+                .onChange(of: viewModel.answer) { newValue in
                     if let userAnswer = Int(newValue),
-                       userAnswer == currentInfo.answer {
+                       userAnswer == viewModel.currentInfo.answer {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             AudioServicesPlaySystemSound(systemSoundID)
-                            shouldAnimateCheckmark = true
+                            viewModel.shouldAnimateCheckmark = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                                shouldAnimateCheckmark = false
+                                viewModel.shouldAnimateCheckmark = false
                             }
-                            sessionScore += 1
-                            currentInfo = equationShuffle(termCount: Int(sliderValue))
-                            answer = ""
+                            viewModel.sessionScore += 1
+                            viewModel.currentInfo = equationShuffle(termCount: Int(viewModel.sliderValue))
+                            viewModel.answer = ""
                         }
                     }
                 }

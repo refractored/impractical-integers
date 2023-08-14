@@ -34,7 +34,8 @@ struct AnimatedCheckmarkView: View {
 
 struct Keypad: View {
     @Binding var answer: String
-    @Binding var attempts: Int
+//    @Binding var attempts: Int
+    @State var attempts: Int = 0
     let systemSoundID: SystemSoundID = 1306
 
     var endGame: () -> Void
